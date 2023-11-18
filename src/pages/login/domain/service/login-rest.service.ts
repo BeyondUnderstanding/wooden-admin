@@ -17,7 +17,7 @@ interface AuthResponce {
 export interface LoginService {
     readonly auth: (
         data: AuthArgs
-    ) => Stream<Either<'Bad username or password', AuthResponce>>;
+    ) => Stream<Either<string, AuthResponce>>;
 }
 const domain = 'http://master.wooden_backend.staginator.local/v1/admin';
 
@@ -31,6 +31,8 @@ export const newLoginService = (): LoginService => ({
             axios
                 .post<AuthResponce>(API.auth, data)
                 .then((resp) => either.right(resp.data))
-                .catch((_) => either.left('Bad username or password'))
+                .catch((error) => error.response.status == 401
+                    ? either.left('Bad username or password')
+                    : either.left('Something goes wrong'))
         ),
 });
