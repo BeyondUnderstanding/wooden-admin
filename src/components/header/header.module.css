@@ -1,0 +1,19 @@
+.header {
+    display: flex;
+    padding: 16px;
+    justify-content: space-between;
+    align-items: center;
+    gap: 32px;
+
+    .label {
+        color: var(--Primary, #120f07);
+        font-family: 'ClashDisplay-Bold';
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+    }
+    .button {
+        width: 304px;
+    }
+}
