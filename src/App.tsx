@@ -4,6 +4,8 @@ import { Layout } from './pages/layout/layout.component';
 import Cookies from 'js-cookie';
 import { redirect } from 'react-router-dom';
 import { LoginPage } from './pages/login/login.page';
+import { OrdersPage } from './pages/orders/view/orders.page';
+import React from 'react';
 
 const loader = async () => {
     if (!Cookies.get('access_token')) {
@@ -20,7 +22,12 @@ const router = createBrowserRouter([
         children: [
             {
                 path: '/',
-                element: <div>orders</div>,
+                element: <OrdersPage />,
+            },
+            {
+                path: 'order/:id',
+                // loader: loader - заранее подгружать данные
+                element: <div>12</div>,
             },
             {
                 path: '/games',

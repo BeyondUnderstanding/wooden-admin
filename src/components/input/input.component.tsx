@@ -1,4 +1,5 @@
 import css from './input.module.css';
+import React from 'react';
 
 export interface InputProps {
     readonly type: 'text' | 'password';

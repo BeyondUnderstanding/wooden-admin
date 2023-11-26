@@ -1,7 +1,6 @@
 .header {
     display: flex;
     padding: 16px;
-    justify-content: space-between;
     align-items: center;
     gap: 32px;
 
@@ -13,7 +12,18 @@
         font-weight: 700;
         line-height: normal;
     }
+    .link {
+        max-width: 304px;
+        width: 100%;
+    }
     .button {
-        width: 304px;
+        max-width: 304px;
+        width: 100%;
+    }
+
+    .controllWrap {
+        display: flex;
+        gap: 32px;
+        width: 100%;
     }
 }

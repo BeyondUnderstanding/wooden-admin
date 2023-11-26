@@ -1,0 +1,20 @@
+.wrap {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    .label {
+        color: var(--Primary, #120f07);
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 600;
+        letter-spacing: -0.24px;
+    }
+
+    .controll {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 8px;
+    }
+}

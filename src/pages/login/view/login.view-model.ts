@@ -11,7 +11,6 @@ import { chain, tap } from '@most/core';
 import { createAdapter } from '@most/adapter';
 import Cookies from 'js-cookie';
 import { either } from 'fp-ts';
-import { redirect } from 'react-router';
 
 interface LoginViewModel {
     readonly onChange: (data: Partial<LoginForm>) => void;

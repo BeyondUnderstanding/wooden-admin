@@ -1,0 +1,9 @@
+.table {
+    width: 100%;
+    text-align: center;
+    border-spacing: 0 10px;
+
+    .cell {
+        padding: 9px;
+    }
+}

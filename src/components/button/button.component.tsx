@@ -2,6 +2,7 @@
 
 import css from './button.module.css';
 import cn from 'classnames';
+import React from 'react';
 
 export type ButtonType = 'def' | 'prime' | 'error' | 'link';
 
@@ -25,7 +26,6 @@ export const Button = ({
     return (
         <button
             onClick={(e) => {
-                e.preventDefault();
                 e.stopPropagation();
                 !disabled && onClick();
             }}
