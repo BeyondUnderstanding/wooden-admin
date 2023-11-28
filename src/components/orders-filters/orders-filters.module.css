@@ -1,0 +1,13 @@
+.wrap {
+    display: flex;
+    gap: 24px;
+    border-top: 1px solid #e5e3db;
+    border-bottom: 1px solid #e5e3db;
+    padding: 8px;
+    font-size: 14px;
+
+    .labelFilter {
+        display: flex;
+        gap: 8px;
+    }
+}

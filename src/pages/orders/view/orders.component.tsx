@@ -4,6 +4,7 @@ import { OrderHeaderContainer } from '../../../components/order-header/order-hea
 import css from './orders.module.css';
 import { Order } from '../domain/model/orders.model';
 import { Loader } from '../../../components/loader/loader.component';
+import { OrdersFiltersContainer } from '../../../components/orders-filters/orders-filters.container';
 
 interface OrdersProps {
     readonly orders: ReadonlyArray<Order>;
@@ -11,12 +12,13 @@ interface OrdersProps {
 }
 
 export const Orders = injectable(
-    OrderHeaderContainer,
-    (OrderHeaderContainer) =>
+    OrdersFiltersContainer,
+    (OrdersFiltersContainer) =>
         ({ orders, isLoadingExtraOrders }: OrdersProps) => {
             return (
                 <div className={css.wrap}>
                     <OrderHeaderContainer />
+                    <OrdersFiltersContainer />
                     <Table
                         headers={[
                             '№',
@@ -29,6 +31,7 @@ export const Orders = injectable(
                             'Сумма',
                         ]}
                         cells={orders}
+                        slagToOpen="/order/"
                     />
                     {isLoadingExtraOrders && <Loader />}
                 </div>

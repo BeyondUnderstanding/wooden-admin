@@ -14,9 +14,10 @@ export interface ObjectWithId {
 export interface TableProps {
     readonly headers: ReadonlyArray<string>;
     readonly cells: ReadonlyArray<ObjectWithId>;
+    readonly slagToOpen: string;
 }
 
-export const Table = ({ headers, cells }: TableProps) => {
+export const Table = ({ headers, cells, slagToOpen }: TableProps) => {
     return (
         <table className={css.table}>
             <thead className={css.head}>
@@ -42,7 +43,7 @@ export const Table = ({ headers, cells }: TableProps) => {
                                 </td>
                             ))}
                         <td className={css.cell}>
-                            <Link to={`/order/${row.id}`}>
+                            <Link to={`${slagToOpen}${row.id}`}>
                                 <Button
                                     label={'Открыть'}
                                     onClick={constVoid}

@@ -5,24 +5,31 @@ import {
 } from '../../../utils/run-view-model.utils';
 import { OrderService } from '../domain/service/orders-rest.service';
 import { Order } from '../domain/model/orders.model';
-import { Property } from '@frp-ts/core';
+import { Property, property } from '@frp-ts/core';
 import { newLensedAtom } from '@frp-ts/lens';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { either } from 'fp-ts';
 import { chain, debounce, now, tap } from '@most/core';
 import { scroll } from '@most/dom-event';
+import { fromProperty } from '../../../utils/property.utils';
 
-interface OrdersViewModel {
+export interface OrdersStore {
     readonly orders: Property<ReadonlyArray<Order>>;
     readonly isLoadingExtraOrders: Property<boolean>;
+    readonly setOrders: (x: ReadonlyArray<Order>) => void;
+    readonly setIsLoadingExtraOrders: (x: boolean) => void;
+    readonly setOnlyActive: (x: boolean) => void;
+    readonly setOnlyPayed: (x: boolean) => void;
 }
 
-type NewOrdersViewModel = ValueWithEffect<OrdersViewModel>;
+type NewOrdersStore = ValueWithEffect<OrdersStore>;
 
-export const newLoginViewModel = injectable(
+export const newOrdersStore = injectable(
     token('service')<OrderService>(),
-    (service): NewOrdersViewModel => {
+    (service): NewOrdersStore => {
         const orders = newLensedAtom<ReadonlyArray<Order>>([]);
+        const onlyActive = newLensedAtom(false);
+        const onlyPayed = newLensedAtom(false);
 
         const isLoadingExtraOrders = newLensedAtom<boolean>(false);
 
@@ -47,7 +54,12 @@ export const newLoginViewModel = injectable(
                 isLoadingExtraOrders.set(true);
                 let currentScrollPos = window.pageYOffset;
                 if (currentScrollPos > prevScrollPos) {
-                    return service.getAll(orders.get().length, 10);
+                    return service.getAll(
+                        orders.get().length,
+                        10,
+                        onlyPayed.get(),
+                        onlyActive.get()
+                    );
                 }
                 prevScrollPos = currentScrollPos;
                 return now(either.left(''));
@@ -67,13 +79,42 @@ export const newLoginViewModel = injectable(
             )
         );
 
+        const filtersEffect = pipe(
+            property.combine(
+                onlyActive,
+                onlyPayed,
+                (onlyActive, onlyPayed) => ({ onlyActive, onlyPayed })
+            ),
+            fromProperty,
+            tap((_) => isLoadingExtraOrders.set(true)),
+            chain(({ onlyActive, onlyPayed }) =>
+                service.getAll(0, 20, onlyPayed, onlyActive)
+            ),
+            tap(
+                flow(
+                    either.fold(
+                        () => isLoadingExtraOrders.set(false),
+                        (ordersResp: ReadonlyArray<Order>) => {
+                            orders.set(ordersResp);
+                            isLoadingExtraOrders.set(false);
+                        }
+                    )
+                )
+            )
+        );
+
         return valueWithEffect.new(
             {
                 orders,
                 isLoadingExtraOrders,
+                setOrders: (x) => orders.set(x),
+                setIsLoadingExtraOrders: (x) => isLoadingExtraOrders.set(x),
+                setOnlyActive: (x) => onlyActive.set(x),
+                setOnlyPayed: (x) => onlyPayed.set(x),
             },
             initOrdersEffect,
-            scrollEffect
+            scrollEffect,
+            filtersEffect
         );
     }
 );

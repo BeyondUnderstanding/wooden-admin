@@ -11,7 +11,8 @@ export interface OrderService {
     readonly getAll: (
         start: number,
         size: number,
-        payed_only?: boolean
+        payed_only?: boolean,
+        active_only?: boolean
     ) => Stream<Either<string, ReadonlyArray<Order>>>;
 }
 
@@ -19,11 +20,11 @@ const API = {
     orders: `${domain}/orders`,
 };
 export const newOrdersService = (): OrderService => ({
-    getAll: (start, size, payed_only = false) =>
+    getAll: (start, size, payed_only = false, active_only = false) =>
         fromPromise(
             axios
                 .get<ReadonlyArray<OrderAPI>>(
-                    `${API.orders}/?start=${start}&size=${size}&payed_only=${payed_only}`,
+                    `${API.orders}/?start=${start}&size=${size}&payed_only=${payed_only}&active_only=${active_only}`,
                     {
                         headers: {
                             Authorization: `Bearer ${Cookies.get(
