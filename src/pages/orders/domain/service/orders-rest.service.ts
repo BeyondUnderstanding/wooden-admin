@@ -6,6 +6,7 @@ import { fromPromise } from '@most/core';
 import axios from 'axios';
 import { either } from 'fp-ts';
 import Cookies from 'js-cookie';
+import { logout } from '../../../../utils/rest.utils';
 
 export interface OrderService {
     readonly getAll: (
@@ -34,10 +35,11 @@ export const newOrdersService = (): OrderService => ({
                     }
                 )
                 .then((resp) => either.right(resp.data.map(mapOrder)))
-                .catch((error) =>
-                    either.left(
+                .catch((error) => {
+                    logout();
+                    return either.left(
                         `Something goes wrong status = ${error.response.status}`
-                    )
-                )
+                    );
+                })
         ),
 });

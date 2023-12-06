@@ -1,10 +1,10 @@
 import { injectable } from '@injectable-ts/core';
 import { Table } from '../../../components/table/table.component';
-import { OrderHeaderContainer } from '../../../components/order-header/order-header.container';
 import css from './orders.module.css';
 import { Order } from '../domain/model/orders.model';
 import { Loader } from '../../../components/loader/loader.component';
 import { OrdersFiltersContainer } from '../../../components/orders-filters/orders-filters.container';
+import { OrderHeader } from '../../../components/order-header/order-header.component';
 
 interface OrdersProps {
     readonly orders: ReadonlyArray<Order>;
@@ -17,7 +17,7 @@ export const Orders = injectable(
         ({ orders, isLoadingExtraOrders }: OrdersProps) => {
             return (
                 <div className={css.wrap}>
-                    <OrderHeaderContainer />
+                    <OrderHeader />
                     <OrdersFiltersContainer />
                     <Table
                         headers={[

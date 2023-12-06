@@ -3,17 +3,19 @@ import css from './checkbox-basic.module.css';
 
 interface CheckboxBasikProps {
     readonly label?: string;
-    readonly getCheckedState: (x: boolean) => void;
+    readonly getCheckedState?: (x: boolean) => void;
+    readonly isCheckedInit?: boolean;
 }
 
 export const CheckboxBasik = ({
     label,
     getCheckedState,
+    isCheckedInit,
 }: CheckboxBasikProps) => {
-    const [isChecked, setIsChecked] = useState(false);
+    const [isChecked, setIsChecked] = useState(isCheckedInit ?? false);
 
     useEffect(() => {
-        getCheckedState(isChecked);
+        getCheckedState && getCheckedState(isChecked);
     }, [getCheckedState, isChecked]);
     return (
         <>
@@ -22,7 +24,7 @@ export const CheckboxBasik = ({
                     type="checkbox"
                     checked={isChecked}
                     onChange={() => {
-                        setIsChecked(!isChecked);
+                        isCheckedInit === undefined && setIsChecked(!isChecked);
                     }}
                 />
                 <span className={css['checkmark']}></span>

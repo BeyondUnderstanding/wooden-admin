@@ -6,6 +6,7 @@ import { redirect } from 'react-router-dom';
 import { LoginPage } from './pages/login/login.page';
 import { OrdersPage } from './pages/orders/view/orders.page';
 import React from 'react';
+import { GamesContainer } from './pages/games/view/games.container';
 
 const loader = async () => {
     if (!Cookies.get('access_token')) {
@@ -31,7 +32,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/games',
-                element: <div>games</div>,
+                element: <GamesContainer />,
             },
             {
                 path: '/timeslots',

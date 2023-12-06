@@ -5,6 +5,8 @@ import { constVoid } from 'fp-ts/lib/function';
 import { DateFromISOString } from 'io-ts-types';
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { boolean } from 'io-ts';
+import { CheckboxBasik } from '../checkbox-basic/checkbox-basic.component';
 
 export interface ObjectWithId {
     id: string | number;
@@ -18,6 +20,7 @@ export interface TableProps {
 }
 
 export const Table = ({ headers, cells, slagToOpen }: TableProps) => {
+    console.log(cells);
     return (
         <table className={css.table}>
             <thead className={css.head}>
@@ -37,9 +40,13 @@ export const Table = ({ headers, cells, slagToOpen }: TableProps) => {
                                     className={css.cell}
                                     key={`${cell}-${uuidv4()}`}
                                 >
-                                    {DateFromISOString.is(cell)
-                                        ? cell.toLocaleDateString()
-                                        : `${cell}`}
+                                    {DateFromISOString.is(cell) ? (
+                                        cell.toLocaleDateString()
+                                    ) : boolean.is(cell) ? (
+                                        <CheckboxBasik isCheckedInit={cell} />
+                                    ) : (
+                                        `${cell}`
+                                    )}
                                 </td>
                             ))}
                         <td className={css.cell}>
