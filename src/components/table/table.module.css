@@ -6,4 +6,8 @@
     .cell {
         padding: 9px;
     }
+    .row:hover {
+        background: #120f070c;
+        cursor: default;
+    }
 }

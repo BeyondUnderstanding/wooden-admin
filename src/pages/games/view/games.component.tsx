@@ -1,10 +1,10 @@
 import { Loader } from '../../../components/loader/loader.component';
 import { Table } from '../../../components/table/table.component';
-import { Game } from '../domain/model/game.model';
+import { Games as IGames } from '../domain/model/game.model';
 import css from './games.module.css';
 
 interface GamesProps {
-    readonly games: ReadonlyArray<Game>;
+    readonly games: ReadonlyArray<IGames>;
     readonly isLoadingExtraOrders: boolean;
 }
 

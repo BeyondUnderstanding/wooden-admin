@@ -7,6 +7,9 @@ import { LoginPage } from './pages/login/login.page';
 import { OrdersPage } from './pages/orders/view/orders.page';
 import React from 'react';
 import { GamesContainer } from './pages/games/view/games.container';
+import { GameContainer } from './pages/games/game/view/game.container';
+import { newGamesService } from './pages/games/domain/service/game.service';
+import { newGamesStore } from './pages/games/view/games.store';
 
 const loader = async () => {
     if (!Cookies.get('access_token')) {
@@ -14,6 +17,11 @@ const loader = async () => {
     }
     return null;
 };
+
+const gameService = newGamesService();
+const GamesResolve = GamesContainer({
+    newStore: newGamesStore({ service: gameService }),
+});
 
 const router = createBrowserRouter([
     {
@@ -27,12 +35,16 @@ const router = createBrowserRouter([
             },
             {
                 path: 'order/:id',
-                // loader: loader - заранее подгружать данные
                 element: <div>12</div>,
             },
             {
                 path: '/games',
-                element: <GamesContainer />,
+                element: <GamesResolve />,
+            },
+            {
+                path: 'game/:id',
+                loader: ({ params }) => gameService.getById(params),
+                element: <GameContainer />,
             },
             {
                 path: '/timeslots',

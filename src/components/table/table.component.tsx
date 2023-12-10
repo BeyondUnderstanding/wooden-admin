@@ -20,7 +20,6 @@ export interface TableProps {
 }
 
 export const Table = ({ headers, cells, slagToOpen }: TableProps) => {
-    console.log(cells);
     return (
         <table className={css.table}>
             <thead className={css.head}>

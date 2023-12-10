@@ -1,0 +1,99 @@
+.titleWrap {
+    display: flex;
+    gap: 24px;
+
+    .title {
+        color: #000;
+        font-size: 32px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+    }
+}
+
+.imgWrap {
+    display: flex;
+    flex-direction: column;
+
+    .title {
+        color: #000;
+        font-size: 24px;
+        font-weight: 300;
+        display: flex;
+        gap: 16px;
+        align-items: center;
+    }
+
+    .img {
+        width: 130px;
+        height: 130px;
+    }
+
+    .imgsLine {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .imgsWrap {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+    }
+}
+
+.characteristicsWrap {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 16px;
+
+    .characteristicsHeaderWrap {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+    }
+
+    .characteristicsControllWrap {
+        display: grid;
+        width: 40%;
+        height: 40px;
+        grid-template-columns: repeat(3, 1fr);
+        grid-column-gap: 10px;
+        grid-row-gap: 4px;
+    }
+
+    .characteristicsDelete {
+        max-width: 110px;
+        height: 40px;
+    }
+
+    .name {
+        border-radius: 12px;
+        padding-right: 8px;
+        background: #fcfcfc;
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+    }
+
+    .characteristicsInput {
+        border-radius: 12px;
+        background: #fcfcfc;
+        border: none;
+        padding: 8px;
+    }
+}
+
+.wrap {
+    margin: 10px 0 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
