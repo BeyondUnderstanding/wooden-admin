@@ -66,10 +66,20 @@ export const mapGame = (game: GameAPI): Game => ({
     ...game,
     salesCount: game.sales_count,
     images: game.images.map((image) => ({ ...image, gameId: image.game_id })),
-    attributes: game.attributes.map((attribute) => ({
-        ...attribute,
-        isMain: attribute.is_main,
-    })),
+    attributes: game.attributes
+        .map((attribute) => ({
+            ...attribute,
+            isMain: attribute.is_main,
+        }))
+        .sort((a, b) => {
+            if (a.is_main === b.is_main) {
+                return 0;
+            } else if (a.is_main) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }),
 });
 
 export const emptyGame = (): Game => ({
@@ -81,3 +91,6 @@ export const emptyGame = (): Game => ({
     images: [],
     attributes: [],
 });
+
+// action region
+export type GameAction = 'title change';

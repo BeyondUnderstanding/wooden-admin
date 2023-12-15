@@ -2,10 +2,21 @@ import { constVoid } from 'fp-ts/lib/function';
 import { Button } from '../../../../components/button/button.component';
 import css from './game.module.css';
 import { Game as IGame } from '../../domain/model/game.model';
+import { Popup } from '../../../../components/popup/popup';
+import { Property } from '@frp-ts/core';
 
-export interface GameProps extends IGame {}
+export interface GameProps extends IGame {
+    readonly popupIsOpen: Property<boolean>;
+    readonly onCancel: () => void;
+}
 
-export const Game = ({ title, images, attributes }: GameProps) => {
+export const Game = ({
+    title,
+    images,
+    attributes,
+    popupIsOpen,
+    onCancel,
+}: GameProps) => {
     return (
         <div className={css.wrap}>
             <div className={css.titleWrap}>
@@ -100,6 +111,16 @@ export const Game = ({ title, images, attributes }: GameProps) => {
                     ))}
                 </div>
             </div>
+            <Popup
+                onCancelText={'NO'}
+                onCompliteText={'YES'}
+                title="TEST"
+                onCancel={onCancel}
+                onComplite={constVoid}
+                isOpen={popupIsOpen}
+            >
+                <span>123</span>
+            </Popup>
         </div>
     );
 };

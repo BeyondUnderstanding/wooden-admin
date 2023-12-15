@@ -1,0 +1,30 @@
+.wrap {
+    position: fixed;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #33333378;
+
+    .body {
+        position: absolute;
+        top: 30%;
+        left: 40%;
+        max-width: 512px;
+        background: #fff;
+        width: 100%;
+        padding: 24px;
+        border-radius: 12px;
+    }
+
+    .title {
+        color: #000;
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: -0.32px;
+    }
+    .controls {
+        display: flex;
+        justify-content: space-between;
+    }
+}

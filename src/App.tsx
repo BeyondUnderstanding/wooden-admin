@@ -1,5 +1,5 @@
 import './App.css';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Params, RouterProvider } from 'react-router-dom';
 import { Layout } from './pages/layout/layout.component';
 import Cookies from 'js-cookie';
 import { redirect } from 'react-router-dom';
@@ -10,6 +10,9 @@ import { GamesContainer } from './pages/games/view/games.container';
 import { GameContainer } from './pages/games/game/view/game.container';
 import { newGamesService } from './pages/games/domain/service/game.service';
 import { newGamesStore } from './pages/games/view/games.store';
+import { Stream } from '@most/types';
+import { Either } from 'fp-ts/lib/Either';
+import { Games, Game } from './pages/games/domain/model/game.model';
 
 const loader = async () => {
     if (!Cookies.get('access_token')) {
@@ -44,7 +47,7 @@ const router = createBrowserRouter([
             {
                 path: 'game/:id',
                 loader: ({ params }) => gameService.getById(params),
-                element: <GameContainer />,
+                element: <GameContainer service={gameService} />,
             },
             {
                 path: '/timeslots',
