@@ -1,13 +1,17 @@
 import { constVoid } from 'fp-ts/lib/function';
 import { Button } from '../../../../components/button/button.component';
 import css from './game.module.css';
-import { Game as IGame } from '../../domain/model/game.model';
+import { GameAction, Game as IGame } from '../../domain/model/game.model';
 import { Popup } from '../../../../components/popup/popup';
 import { Property } from '@frp-ts/core';
+import { GamePopupBody } from './popup/popup.component';
 
 export interface GameProps extends IGame {
     readonly popupIsOpen: Property<boolean>;
     readonly onCancel: () => void;
+    readonly onOpenByAction: (action: GameAction | null) => void;
+    readonly activeAction: Property<GameAction | null>;
+    readonly onChangeGame: (data: Partial<IGame>) => void;
 }
 
 export const Game = ({
@@ -16,6 +20,9 @@ export const Game = ({
     attributes,
     popupIsOpen,
     onCancel,
+    onOpenByAction,
+    activeAction,
+    onChangeGame,
 }: GameProps) => {
     return (
         <div className={css.wrap}>
@@ -30,7 +37,7 @@ export const Game = ({
                 />
                 <Button
                     label={'Изменить'}
-                    onClick={constVoid}
+                    onClick={() => onOpenByAction('title change')}
                     disabled={false}
                     size="medium"
                     type={'def'}
@@ -111,15 +118,13 @@ export const Game = ({
                     ))}
                 </div>
             </div>
-            <Popup
-                onCancelText={'NO'}
-                onCompliteText={'YES'}
-                title="TEST"
-                onCancel={onCancel}
-                onComplite={constVoid}
-                isOpen={popupIsOpen}
-            >
-                <span>123</span>
+            <Popup title="TEST" isOpen={popupIsOpen}>
+                <GamePopupBody
+                    type={activeAction}
+                    onChange={onChangeGame}
+                    onCancel={onCancel}
+                    onComplite={constVoid}
+                />
             </Popup>
         </div>
     );

@@ -19,11 +19,10 @@ export const GameContainer = ({ service }: GameContainerProps) => {
         either.fold(emptyGame, (game) => game)
     );
 
-    const vm = useValueWithEffect(() => newGameViewModel(service), []);
+    const vm = useValueWithEffect(() => newGameViewModel(service, game), []);
 
     return React.createElement(Game, {
         ...game,
-        popupIsOpen: vm.popupIsOpen,
-        onCancel: vm.onCancel,
+        ...vm,
     });
 };
