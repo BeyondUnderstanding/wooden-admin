@@ -5,11 +5,13 @@ import Cookies from 'js-cookie';
 import { redirect } from 'react-router-dom';
 import { LoginPage } from './pages/login/login.page';
 import { OrdersPage } from './pages/orders/view/orders.page';
+import { OrderContainer } from './pages/order/view/order.container';
 import React from 'react';
 import { GamesContainer } from './pages/games/view/games.container';
 import { GameContainer } from './pages/games/game/view/game.container';
 import { newGamesService } from './pages/games/domain/service/game.service';
 import { newGamesStore } from './pages/games/view/games.store';
+import { newOrderService } from './pages/order/domain/service/order.service';
 
 const loader = async () => {
     if (!Cookies.get('access_token')) {
@@ -19,6 +21,7 @@ const loader = async () => {
 };
 
 const gameService = newGamesService();
+const orderService = newOrderService();
 const GamesResolve = GamesContainer({
     newStore: newGamesStore({ service: gameService }),
 });
@@ -35,7 +38,8 @@ const router = createBrowserRouter([
             },
             {
                 path: 'order/:id',
-                element: <div>12</div>,
+                loader: ({ params }) =>  orderService.getById(params),
+                element: <OrderContainer />,
             },
             {
                 path: '/games',

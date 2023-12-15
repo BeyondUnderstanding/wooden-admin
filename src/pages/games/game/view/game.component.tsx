@@ -2,7 +2,6 @@ import { constVoid } from 'fp-ts/lib/function';
 import { Button } from '../../../../components/button/button.component';
 import css from './game.module.css';
 import { Game as IGame } from '../../domain/model/game.model';
-
 export interface GameProps extends IGame {}
 
 export const Game = ({ title, images, attributes }: GameProps) => {

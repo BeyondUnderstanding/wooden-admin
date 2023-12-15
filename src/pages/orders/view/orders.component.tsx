@@ -17,7 +17,7 @@ export const Orders = injectable(
         ({ orders, isLoadingExtraOrders }: OrdersProps) => {
             return (
                 <div className={css.wrap}>
-                    <OrderHeader/>
+                    <OrderHeader />
                     <OrdersFiltersContainer />
                     <Table
                         headers={[
@@ -31,7 +31,7 @@ export const Orders = injectable(
                             'Сумма',
                         ]}
                         cells={orders}
-                        slagToOpen="../../order/view/order.page"
+                        slagToOpen="/order/"
                     />
                     {isLoadingExtraOrders && <Loader />}
                 </div>
