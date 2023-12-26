@@ -2,3 +2,10 @@
     display: flex;
     justify-content: space-between;
 }
+
+.alarmColor {
+    color: #f00;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+}

@@ -9,7 +9,6 @@ export interface GamesAPI {
 }
 
 export interface Games extends ObjectWithId {
-    id: number;
     title: string;
     price: number;
     isSeleted: boolean;
@@ -42,6 +41,14 @@ export interface GameAPI {
     }>;
 }
 
+export interface Attributes {
+    id: number;
+    name: string;
+    value: string;
+    isMain: boolean;
+    localeState?: 'new' | 'deleted';
+}
+
 export interface Game {
     title: string;
     description: string;
@@ -54,12 +61,7 @@ export interface Game {
         link: string;
         priority: number;
     }>;
-    attributes: Array<{
-        id: 0;
-        name: string;
-        value: string;
-        isMain: false;
-    }>;
+    attributes: Array<Attributes>;
 }
 
 export const mapGame = (game: GameAPI): Game => ({
@@ -93,4 +95,15 @@ export const emptyGame = (): Game => ({
 });
 
 // action region
-export type GameAction = 'title change';
+export type GameAction =
+    | 'title change'
+    | 'save changes'
+    | 'error'
+    | 'add characteristics'
+    | 'upload file'
+    | ChangePriority;
+
+interface ChangePriority {
+    kind: 'change priority';
+    imgId: number;
+}
