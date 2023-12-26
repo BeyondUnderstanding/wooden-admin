@@ -17,7 +17,7 @@ export interface NewImg {
     id?: number;
 }
 
-export interface GameViewModel {
+export interface GameStore {
     readonly popupIsOpen: Property<boolean>;
     readonly onCancel: () => void;
     readonly onOpenByAction: (action: GameAction | null) => void;
@@ -36,22 +36,20 @@ export interface GameViewModel {
     readonly imgUpdatePrioritySave: () => void;
 }
 
-export interface NewGameViewModel {
-    (service: GamesService, initGame: Game): ValueWithEffect<GameViewModel>;
+export interface NewGameStore {
+    (service: GamesService, initGame: Game): ValueWithEffect<GameStore>;
 }
-export const newGameViewModel: NewGameViewModel = (service, initGame) => {
+export const newGameStore: NewGameStore = (service, initGame) => {
     const game = newLensedAtom(initGame);
     const activeAction = newLensedAtom<GameAction | null>(null);
+    const popupIsOpen = newLensedAtom(false);
+    const img = newLensedAtom<NewImg>({} as NewImg);
+
+    const [imgDelete, imgDeleteEvent] = createAdapter<number>();
     const [onOpenByAction, onOpenByActionEvent] =
         createAdapter<GameAction | null>();
-
     const [onSave, onSaveEvent] = createAdapter<void>();
-
-    const popupIsOpen = newLensedAtom(false);
-
-    const img = newLensedAtom<NewImg>({} as NewImg);
     const [imgUploadSave, imgUploadEvent] = createAdapter<void>();
-
     const [imgUpdatePrioritySave, imgUpdatePrioritySaveEvent] =
         createAdapter<void>();
 
@@ -82,7 +80,21 @@ export const newGameViewModel: NewGameViewModel = (service, initGame) => {
     const getChangedAttributes = () =>
         game.get().attributes.filter((el) => !initGame.attributes.includes(el));
 
-    const [imgDelete, imgDeleteEvent] = createAdapter<number>();
+    const exeption = () => onOpenByAction('error');
+
+    const onChangeGame = (data: Partial<Game>) => {
+        game.modify((g) => {
+            if (data.attributes && data.attributes.length > 0) {
+                return {
+                    ...g,
+                    ...data,
+                    attributes: [...g.attributes, ...data.attributes],
+                };
+            }
+            return { ...g, ...data };
+        });
+        onOpenByAction(null);
+    };
 
     const saveEffect = pipe(
         onSaveEvent,
@@ -103,10 +115,7 @@ export const newGameViewModel: NewGameViewModel = (service, initGame) => {
         tap(
             flow(
                 either.sequenceArray,
-                either.fold(
-                    (_) => onOpenByAction('error'),
-                    () => onOpenByAction(null)
-                )
+                either.fold(exeption, () => onOpenByAction(null))
             )
         )
     );
@@ -121,29 +130,24 @@ export const newGameViewModel: NewGameViewModel = (service, initGame) => {
 
     const saveImgEffect = pipe(
         imgUploadEvent,
-        chain((_) => service.upladFile(img.get(), game.get().id)),
+        chain(() => service.upladFile(img.get(), game.get().id)),
         tap(
             flow(
-                either.fold(
-                    (_) => onOpenByAction('error'),
-                    (x) => {
-                        onOpenByAction(null);
-                        game.modify((g) => ({
-                            ...g,
-                            images: [
-                                ...g.images,
-                                {
-                                    id:
-                                        Math.max(...g.images.map((x) => x.id)) +
-                                        1,
-                                    gameId: x.id,
-                                    link: x.url,
-                                    priority: img.get().priority,
-                                },
-                            ],
-                        }));
-                    }
-                )
+                either.fold(exeption, (x) => {
+                    onOpenByAction(null);
+                    game.modify((g) => ({
+                        ...g,
+                        images: [
+                            ...g.images,
+                            {
+                                id: Math.max(...g.images.map((x) => x.id)) + 1,
+                                gameId: x.id,
+                                link: x.url,
+                                priority: img.get().priority,
+                            },
+                        ],
+                    }));
+                })
             )
         )
     );
@@ -153,42 +157,36 @@ export const newGameViewModel: NewGameViewModel = (service, initGame) => {
         chain((id) => service.deleteFile(id)),
         tap(
             flow(
-                either.fold(
-                    (_) => onOpenByAction('error'),
-                    (id) => {
-                        game.modify((g) => ({
-                            ...g,
-                            images: g.images.filter((img) => img.id !== id),
-                        }));
-                        onOpenByAction(null);
-                    }
-                )
+                either.fold(exeption, (id) => {
+                    game.modify((g) => ({
+                        ...g,
+                        images: g.images.filter((img) => img.id !== id),
+                    }));
+                    onOpenByAction(null);
+                })
             )
         )
     );
 
     const imgUpdatePrioritySaveEffect = pipe(
         imgUpdatePrioritySaveEvent,
-        chain((_) =>
+        chain(() =>
             service.updateImgPriority(img.get().id ?? 0, img.get().priority)
         ),
         tap(
             flow(
-                either.fold(
-                    (_) => onOpenByAction('error'),
-                    (data) => {
-                        game.modify((g) => ({
-                            ...g,
-                            images: g.images.map((img) => {
-                                if (img.id === data.id) {
-                                    return { ...img, priority: data.priority };
-                                }
-                                return img;
-                            }),
-                        }));
-                        onOpenByAction(null);
-                    }
-                )
+                either.fold(exeption, (data) => {
+                    game.modify((g) => ({
+                        ...g,
+                        images: g.images.map((img) => {
+                            if (img.id === data.id) {
+                                return { ...img, priority: data.priority };
+                            }
+                            return img;
+                        }),
+                    }));
+                    onOpenByAction(null);
+                })
             )
         )
     );
@@ -199,6 +197,7 @@ export const newGameViewModel: NewGameViewModel = (service, initGame) => {
             onSave,
             imgDelete,
             popupIsOpen,
+            onChangeGame,
             activeAction,
             imgUploadSave,
             onOpenByAction,
@@ -207,19 +206,6 @@ export const newGameViewModel: NewGameViewModel = (service, initGame) => {
             onChangeGameAttributes,
             onCancel: () => onOpenByAction(null),
             imgUpload: (file) => img.modify((f) => ({ ...f, ...file })),
-            onChangeGame: (data) => {
-                game.modify((g) => {
-                    if (data.attributes && data.attributes.length > 0) {
-                        return {
-                            ...g,
-                            ...data,
-                            attributes: [...g.attributes, ...data.attributes],
-                        };
-                    }
-                    return { ...g, ...data };
-                });
-                onOpenByAction(null);
-            },
         },
         actionChangeEvent,
         saveEffect,

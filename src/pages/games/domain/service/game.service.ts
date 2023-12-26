@@ -16,7 +16,7 @@ import { either } from 'fp-ts';
 import { logout } from '../../../../utils/rest.utils';
 import { Params } from 'react-router-dom';
 import { pipe } from 'fp-ts/lib/function';
-import { NewImg } from '../../game/view/game.view-model';
+import { NewImg } from '../../game/view/game.store';
 
 export interface GamesService {
     readonly getAll: () => Stream<Either<string, ReadonlyArray<Games>>>;
@@ -188,14 +188,12 @@ export const newGamesService = (): GamesService => ({
         const formData = new FormData();
         formData.append('file', file.img);
 
-        const t = fromPromise(
-            axios.post<{ url: string }>(API.files, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${Cookies.get('access_token')}`,
-                },
-            })
-        );
+        const uploadImg = axios.post<{ url: string }>(API.files, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${Cookies.get('access_token')}`,
+            },
+        });
 
         const saveImg = (data: string) =>
             fromPromise(
@@ -225,7 +223,8 @@ export const newGamesService = (): GamesService => ({
             );
 
         return pipe(
-            t,
+            uploadImg,
+            fromPromise,
             chain((x) => saveImg(x.data.url))
         );
     },
@@ -259,6 +258,12 @@ export const newGamesService = (): GamesService => ({
                             )}`,
                         },
                     }
+                )
+                .then((resp) =>
+                    either.right({
+                        id: resp.data.id,
+                        priority: priority,
+                    })
                 )
                 .catch((_) => either.left('err'))
         );

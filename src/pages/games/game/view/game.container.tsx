@@ -6,7 +6,7 @@ import { Game as IGame, emptyGame } from '../../domain/model/game.model';
 import { pipe } from 'fp-ts/lib/function';
 import { either } from 'fp-ts';
 import { useValueWithEffect } from '../../../../utils/run-view-model.utils';
-import { newGameViewModel } from './game.view-model';
+import { newGameStore } from './game.store';
 import { GamesService } from '../../domain/service/game.service';
 import { useProperty } from '@frp-ts/react';
 
@@ -20,14 +20,19 @@ export const GameContainer = ({ service }: GameContainerProps) => {
         either.fold(emptyGame, (game) => game)
     );
 
-    const vm = useValueWithEffect(
-        () => newGameViewModel(service, innitGame),
+    const store = useValueWithEffect(
+        () => newGameStore(service, innitGame),
         []
     );
-    const game = useProperty(vm.game);
 
-    return React.createElement(Game, {
-        ...vm,
-        game: game,
+    const GameResolve = Game({
+        store,
+    });
+
+    const game = useProperty(store.game);
+
+    return React.createElement(GameResolve, {
+        ...store,
+        game,
     });
 };

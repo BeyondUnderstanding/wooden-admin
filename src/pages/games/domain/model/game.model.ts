@@ -48,6 +48,12 @@ export interface Attributes {
     isMain: boolean;
     localeState?: 'new' | 'deleted';
 }
+interface Image {
+    id: number;
+    gameId: number;
+    link: string;
+    priority: number;
+}
 
 export interface Game {
     title: string;
@@ -55,12 +61,7 @@ export interface Game {
     price: number;
     id: number;
     salesCount: number;
-    images: Array<{
-        id: number;
-        gameId: number;
-        link: string;
-        priority: number;
-    }>;
+    images: Array<Image>;
     attributes: Array<Attributes>;
 }
 

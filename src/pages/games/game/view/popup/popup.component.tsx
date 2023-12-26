@@ -1,11 +1,9 @@
 import { Property } from '@frp-ts/core';
-import { Game, GameAction } from '../../../domain/model/game.model';
+import { Attributes, Game, GameAction } from '../../../domain/model/game.model';
 import { useProperty } from '@frp-ts/react';
 import { Button } from '../../../../../components/button/button.component';
 import css from './popup.module.css';
-import { useMergeState } from '../../../../../utils/hooks';
-import { useState } from 'react';
-import { NewImg } from '../game.view-model';
+import { NewImg } from '../game.store';
 
 interface BaseInfoGame {
     title: string;
@@ -21,6 +19,12 @@ export interface GamePopupBodyProps {
     readonly imgUpload: (event: Partial<NewImg>) => void;
     readonly imgUploadSave: () => void;
     readonly imgUpdatePrioritySave: () => void;
+    //vm
+    readonly baseInfo: BaseInfoGame;
+    readonly setBaseInfo: (chenge: Partial<BaseInfoGame>) => void;
+    readonly characteristics: Array<Attributes>;
+    readonly characteristicsOnChange: (data: Attributes) => void;
+    readonly addNewCharacteristics: () => void;
 }
 
 export const GamePopupBody = ({
@@ -32,46 +36,17 @@ export const GamePopupBody = ({
     imgUpload,
     imgUploadSave,
     imgUpdatePrioritySave,
+    baseInfo,
+    setBaseInfo,
+    characteristics,
+    characteristicsOnChange,
+    addNewCharacteristics,
 }: GamePopupBodyProps) => {
     const action = useProperty(type);
-    const [baseInfo, setBaseInfo] = useMergeState<BaseInfoGame>({
-        ...initData,
-    });
-
-    const [characteristics, setCharacteristics] = useState<Game['attributes']>(
-        []
-    );
-    const characteristicsOnChange = (el: {
-        id: number;
-        name: string;
-        value: string;
-        isMain: boolean;
-        localeState?: 'new' | 'deleted';
-    }) =>
-        setCharacteristics((characteristics) => {
-            const rest = characteristics.filter((ch) => ch.id !== el.id);
-            return [...rest, el].sort((a, b) => a.id - b.id);
-        });
-    const addNewCharacteristics = () =>
-        setCharacteristics((e) => [
-            ...e,
-            {
-                id:
-                    e.length > 0
-                        ? Math.max(...e.map((d) => d.id)) + 1
-                        : initData.attributes.length > 0
-                        ? Math.max(...initData.attributes.map((d) => d.id)) + 1
-                        : 1,
-                name: '',
-                value: '',
-                isMain: false,
-                localeState: 'new',
-            },
-        ]);
 
     // @ts-ignore
     const handleFileChange = (event) => {
-        const file: File = event.target.files[0];
+        const file: File | null = event.target.files[0];
         if (file) {
             imgUpload({ img: file });
         }
