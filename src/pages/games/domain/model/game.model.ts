@@ -16,7 +16,9 @@ export interface Games extends ObjectWithId {
 }
 
 export const mapGames = (game: GamesAPI): Games => ({
-    ...game,
+    id: game.id,
+    title: game.title,
+    price: game.price,
     isSeleted: game.is_deleted,
     isBonusGame: game.is_bonus_game,
 });
