@@ -1,6 +1,6 @@
 import { ObjectWithId } from '../../../../components/table/table.component';
 
-export interface Order extends ObjectWithId {
+export interface Orders extends ObjectWithId {
     id: number;
     startDate: Date;
     endDate: Date;
@@ -17,7 +17,7 @@ export interface Order extends ObjectWithId {
     hasBonusGame: boolean;
 }
 
-export interface OrderAPI {
+export interface OrdersAPI {
     id: number;
     start_date: string;
     end_date: string;
@@ -34,7 +34,7 @@ export interface OrderAPI {
     has_bonus_game: boolean;
 }
 
-export const mapOrder = (data: OrderAPI): Order => ({
+export const mapOrders = (data: OrdersAPI): Orders => ({
     id: data.id,
     clientName: data.client_name,
     clientPhone: data.client_phone,
@@ -49,4 +49,112 @@ export const mapOrder = (data: OrderAPI): Order => ({
     hasManager: data.has_manager,
     managersCount: data.managers_count,
     hasBonusGame: data.has_bonus_game,
+});
+
+interface Image {
+    id: number;
+    game_id: number;
+    link: string;
+    priority: number;
+}
+
+interface Images extends Array<Image> {}
+
+interface Game {
+    id: number;
+    title: string;
+    images: Images;
+}
+
+export interface ProductCard {
+    game: Game;
+    gamePriceBefore: number;
+    gamePriceAfter: number;
+}
+
+
+export interface OrderAPI {
+    id: number;
+    start_date: string;
+    end_date: string;
+    client_name: string;
+    client_phone: string;
+    client_email: string;
+    is_payed: boolean;
+    is_refunded: boolean;
+    is_canceled: boolean;
+    legal_id: string;
+    has_manager: boolean;
+    managers_count: number;
+    total_price: number;
+    has_bonus_game: boolean;
+    bonus_game: Game;
+    games: Array<{
+        game: Game;
+        game_price_before: number;
+        game_price_after: number;
+    }>;
+}
+export interface Order extends ObjectWithId {
+    id: number;
+    startDate: Date;
+    endDate: Date;
+    clientName: string;
+    clientPhone: string;
+    clientEmail: string;
+    isPayed: boolean;
+    isRefunded: boolean;
+    isCanceled: boolean;
+    legalId: string;
+    hasManager: boolean;
+    managersCount: number;
+    totalPrice: number;
+    hasBonusGame: boolean;
+    bonusGame: Game;
+    games: Array<ProductCard>;
+}
+export const mapOrder = (data: OrderAPI): Order => ({
+    id: data.id,
+    startDate: new Date(data.start_date),
+    endDate: new Date(data.end_date),
+    clientName: data.client_name,
+    clientPhone: data.client_phone,
+    clientEmail: data.client_email,
+    isPayed: data.is_payed,
+    isRefunded: data.is_refunded,
+    isCanceled: data.is_canceled,
+    legalId: data.legal_id,
+    hasManager: data.has_manager,
+    managersCount: data.managers_count,
+    totalPrice: data.total_price,
+    hasBonusGame: data.has_bonus_game,
+    bonusGame: data.bonus_game,
+    games: data.games.map((game) => ({
+        game:game.game,
+        gamePriceBefore: game.game_price_before,
+        gamePriceAfter: game.game_price_after,
+    })),
+});
+
+export const emptyOrder = (): Order => ({
+    id: 0,
+    startDate: new Date(),
+    endDate: new Date(),
+    clientName: '-',
+    clientPhone: '-',
+    clientEmail: '-',
+    isPayed: false,
+    isRefunded: false,
+    isCanceled: false,
+    legalId: '-',
+    hasManager: false,
+    managersCount: 0,
+    totalPrice: 0,
+    hasBonusGame: false,
+    games: [],
+    bonusGame: {
+        id: 0,
+        title: '-',
+        images: [],
+    },
 });

@@ -1,13 +1,13 @@
 import { injectable } from '@injectable-ts/core';
 import { Table } from '../../../components/table/table.component';
 import css from './orders.module.css';
-import { Order } from '../domain/model/orders.model';
+import { Orders as IOrders } from '../domain/model/orders.model';
 import { Loader } from '../../../components/loader/loader.component';
 import { OrdersFiltersContainer } from '../../../components/orders-filters/orders-filters.container';
 import { OrderHeader } from '../../../components/order-header/order-header.component';
 
 interface OrdersProps {
-    readonly orders: ReadonlyArray<Order>;
+    readonly orders: ReadonlyArray<IOrders>;
     readonly isLoadingExtraOrders: boolean;
 }
 

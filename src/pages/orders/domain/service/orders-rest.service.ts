@@ -1,30 +1,41 @@
 import { Stream } from '@most/types';
 import { Either } from 'fp-ts/lib/Either';
-import { Order, OrderAPI, mapOrder } from '../model/orders.model';
+import {
+    Orders,
+    OrdersAPI,
+    mapOrders,
+    Order,
+    OrderAPI,
+    mapOrder,
+} from '../model/orders.model';
 import { domain } from '../../../../entry-api';
 import { fromPromise } from '@most/core';
 import axios from 'axios';
 import { either } from 'fp-ts';
 import Cookies from 'js-cookie';
 import { logout } from '../../../../utils/rest.utils';
+import { Params } from 'react-router-dom';
 
-export interface OrderService {
+export interface OrdersService {
     readonly getAll: (
         start: number,
         size: number,
         payed_only?: boolean,
         active_only?: boolean
-    ) => Stream<Either<string, ReadonlyArray<Order>>>;
+    ) => Stream<Either<string, ReadonlyArray<Orders>>>;
+    readonly getById: (
+        params: Params<string>
+    ) => Promise<Either<string, Order>>;
 }
 
 const API = {
     orders: `${domain}/orders`,
 };
-export const newOrdersService = (): OrderService => ({
+export const newOrdersService = (): OrdersService => ({
     getAll: (start, size, payed_only = false, active_only = false) =>
         fromPromise(
             axios
-                .get<ReadonlyArray<OrderAPI>>(
+                .get<ReadonlyArray<OrdersAPI>>(
                     `${API.orders}/?start=${start}&size=${size}&payed_only=${payed_only}&active_only=${active_only}`,
                     {
                         headers: {
@@ -34,7 +45,7 @@ export const newOrdersService = (): OrderService => ({
                         },
                     }
                 )
-                .then((resp) => either.right(resp.data.map(mapOrder)))
+                .then((resp) => either.right(resp.data.map(mapOrders)))
                 .catch((error) => {
                     logout();
                     return either.left(
@@ -42,4 +53,28 @@ export const newOrdersService = (): OrderService => ({
                     );
                 })
         ),
+
+    getById: (params) => {
+        if (!params.id) {
+            return new Promise((resolve, _) => {
+                resolve(either.left('miss parameter {id}'));
+            });
+        }
+        return axios
+            .get<OrderAPI>(`${API.orders}/${params.id}`, {
+                headers: {
+                    Authorization: `Bearer ${Cookies.get('access_token')}`,
+                },
+            })
+            .then((resp) => {
+                console.log(resp.data);
+                return either.right(mapOrder(resp.data));
+            })
+            .catch((error) => {
+                logout();
+                return either.left(
+                    `Something goes wrong status = ${error.response.status}`
+                );
+            });
+    },
 });
