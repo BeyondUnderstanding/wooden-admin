@@ -4,7 +4,12 @@ import {
 } from '../../../../utils/run-view-model.utils';
 import { GamesService } from '../../domain/service/game.service';
 import { newLensedAtom } from '@frp-ts/lens';
-import { Attributes, Game, GameAction } from '../../domain/model/game.model';
+import {
+    Attributes,
+    Game,
+    GameAction,
+    getPopupTitle,
+} from '../../domain/model/game.model';
 import { createAdapter } from '@most/adapter';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { chain, combineArray, tap } from '@most/core';
@@ -19,6 +24,7 @@ export interface NewImg {
 
 export interface GameStore {
     readonly popupIsOpen: Property<boolean>;
+    readonly popupTitle: Property<string>;
     readonly onCancel: () => void;
     readonly onOpenByAction: (action: GameAction | null) => void;
     readonly activeAction: Property<GameAction | null>;
@@ -44,6 +50,7 @@ export const newGameStore: NewGameStore = (service, initGame) => {
     const activeAction = newLensedAtom<GameAction | null>(null);
     const popupIsOpen = newLensedAtom(false);
     const img = newLensedAtom<NewImg>({} as NewImg);
+    const popupTitle = newLensedAtom<string>('');
 
     const [imgDelete, imgDeleteEvent] = createAdapter<number>();
     const [onOpenByAction, onOpenByActionEvent] =
@@ -125,6 +132,7 @@ export const newGameStore: NewGameStore = (service, initGame) => {
         tap((action) => {
             activeAction.set(action);
             popupIsOpen.set(!!action);
+            popupTitle.set(getPopupTitle(action));
         })
     );
 
@@ -196,6 +204,7 @@ export const newGameStore: NewGameStore = (service, initGame) => {
             game,
             onSave,
             imgDelete,
+            popupTitle,
             popupIsOpen,
             onChangeGame,
             activeAction,

@@ -4,12 +4,8 @@ import { useProperty } from '@frp-ts/react';
 import { Button } from '../../../../../components/button/button.component';
 import css from './popup.module.css';
 import { NewImg } from '../game.store';
+import { BaseInfoGame } from './popup.view-model';
 
-interface BaseInfoGame {
-    title: string;
-    description: string;
-    price: number;
-}
 export interface GamePopupBodyProps {
     readonly type: Property<GameAction | null>;
     readonly onChange: (data: Partial<Game>) => void;
@@ -44,6 +40,7 @@ export const GamePopupBody = ({
 }: GamePopupBodyProps) => {
     const action = useProperty(type);
 
+    // всрато файлы какого они типа?
     // @ts-ignore
     const handleFileChange = (event) => {
         const file: File | null = event.target.files[0];
@@ -51,33 +48,57 @@ export const GamePopupBody = ({
             imgUpload({ img: file });
         }
     };
+    // @ts-ignore
+    function dropHandler(ev) {
+        ev.preventDefault();
+
+        if (ev.dataTransfer.items) {
+            [...ev.dataTransfer.items].forEach((item, i) => {
+                if (item.kind === 'file') {
+                    const file = item.getAsFile();
+                    imgUpload({ img: file });
+                }
+            });
+        } else {
+            return;
+        }
+    }
+    // @ts-ignore
+    function dragOverHandler(ev) {
+        ev.preventDefault();
+    }
 
     switch (action) {
         case 'title change':
             return (
-                <>
-                    <div>
+                <div className={css.bodyWrap}>
+                    <div className={css.inputWrap}>
                         <span>title</span>
                         <input
                             type="text"
+                            value={baseInfo.title}
+                            className={css.input}
                             onChange={(e) =>
                                 setBaseInfo({ title: e.target.value })
                             }
                         />
                     </div>
-                    <div>
+                    <div className={css.inputWrap}>
                         <span>price</span>
                         <input
                             type="number"
+                            className={css.input}
+                            value={baseInfo.price}
                             onChange={(e) =>
                                 setBaseInfo({ price: Number(e.target.value) })
                             }
                         />
                     </div>
-                    <div>
+                    <div className={css.inputWrap}>
                         <span>description</span>
                         <textarea
                             value={baseInfo.description}
+                            className={css.textarea}
                             onChange={(e) =>
                                 setBaseInfo({ description: e.target.value })
                             }
@@ -99,11 +120,11 @@ export const GamePopupBody = ({
                             type={'prime'}
                         />
                     </div>
-                </>
+                </div>
             );
         case 'save changes':
             return (
-                <>
+                <div className={css.bodyWrap}>
                     <span className={css.alarmColor}>
                         Это необратимое действие.
                     </span>
@@ -124,12 +145,12 @@ export const GamePopupBody = ({
                             type={'prime'}
                         />
                     </div>
-                </>
+                </div>
             );
         case 'error':
             return (
                 <>
-                    <div> все пошло ПО *****</div>
+                    <div>Что то пошло не так</div>
                     <Button
                         label={'Ладно'}
                         onClick={onCancel}
@@ -141,12 +162,13 @@ export const GamePopupBody = ({
             );
         case 'add characteristics':
             return (
-                <>
+                <div className={css.bodyWrap}>
                     {characteristics.map((el) => (
                         <div>
-                            <div>
+                            <div className={css.characteristicsWrap}>
                                 <input
                                     type="text"
+                                    className={css.input}
                                     placeholder="Имя"
                                     value={el.name}
                                     onChange={(e) =>
@@ -158,6 +180,7 @@ export const GamePopupBody = ({
                                 />
                                 <input
                                     type="text"
+                                    className={css.input}
                                     placeholder="Значение"
                                     value={el.value}
                                     onChange={(e) =>
@@ -167,22 +190,29 @@ export const GamePopupBody = ({
                                         })
                                     }
                                 />
-                                <label>
-                                    основной
-                                    <input
-                                        type="checkbox"
-                                        onChange={(e) =>
-                                            characteristicsOnChange({
-                                                ...el,
-                                                isMain: e.target.checked,
-                                            })
-                                        }
-                                    />
-                                </label>
                             </div>
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    onChange={(e) =>
+                                        characteristicsOnChange({
+                                            ...el,
+                                            isMain: e.target.checked,
+                                        })
+                                    }
+                                />
+                                основной
+                            </label>
                         </div>
                     ))}
-                    <button onClick={addNewCharacteristics}>+</button>
+                    {/* <button onClick={addNewCharacteristics}>+</button> */}
+                    <Button
+                        label={'+'}
+                        onClick={addNewCharacteristics}
+                        disabled={false}
+                        size="medium"
+                        type={'def'}
+                    />
 
                     <div className={css.controls}>
                         <Button
@@ -202,18 +232,34 @@ export const GamePopupBody = ({
                             type={'prime'}
                         />
                     </div>
-                </>
+                </div>
             );
         case 'upload file':
             return (
-                <>
-                    <input type="file" onChange={handleFileChange} />
-                    <input
-                        type="number"
-                        onChange={(e) =>
-                            imgUpload({ priority: Number(e.target.value) })
-                        }
-                    />
+                <div className={css.bodyWrap}>
+                    <label
+                        className={css.fileLabel}
+                        onDragOver={dragOverHandler}
+                        onDrop={dropHandler}
+                    >
+                        Выберете файл
+                        <input
+                            type="file"
+                            size={5242880}
+                            onChange={handleFileChange}
+                            className={css.fileInput}
+                        />
+                    </label>
+                    <div className={css.inputWrap}>
+                        <span>Приоритет</span>
+                        <input
+                            type="number"
+                            className={css.input}
+                            onChange={(e) =>
+                                imgUpload({ priority: Number(e.target.value) })
+                            }
+                        />
+                    </div>
                     <div className={css.controls}>
                         <Button
                             label={'No'}
@@ -230,21 +276,25 @@ export const GamePopupBody = ({
                             type={'prime'}
                         />
                     </div>
-                </>
+                </div>
             );
         default:
             switch (action?.kind) {
                 case 'change priority':
                     return (
-                        <>
-                            <input
-                                type="number"
-                                onChange={(e) =>
-                                    imgUpload({
-                                        priority: Number(e.target.value),
-                                    })
-                                }
-                            />
+                        <div className={css.bodyWrap}>
+                            <div className={css.inputWrap}>
+                                <span>Приоритет</span>
+                                <input
+                                    type="number"
+                                    className={css.input}
+                                    onChange={(e) =>
+                                        imgUpload({
+                                            priority: Number(e.target.value),
+                                        })
+                                    }
+                                />
+                            </div>
                             <div className={css.controls}>
                                 <Button
                                     label={'No'}
@@ -267,7 +317,7 @@ export const GamePopupBody = ({
                                     type={'prime'}
                                 />
                             </div>
-                        </>
+                        </div>
                     );
                 default:
                     return <span>Что то пошло не так</span>;

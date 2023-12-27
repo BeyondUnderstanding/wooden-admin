@@ -1,20 +1,18 @@
 import { constVoid } from 'fp-ts/lib/function';
-import { Button } from '../../../../components/button/button.component';
-import css from './game.module.css';
 import {
     Attributes,
     GameAction,
     Game as IGame,
 } from '../../domain/model/game.model';
-import { Popup } from '../../../../components/popup/popup';
-import { Property } from '@frp-ts/core';
-import cn from 'classnames';
 import { injectable } from '@injectable-ts/core';
+import cn from 'classnames';
+import css from './game.module.css';
+import { Button } from '../../../../components/button/button.component';
 import { GamePopupBodyContainer } from './popup/popup.container';
+import { PopupContainer } from '../../../../components/popup/popup.container';
 
 export interface GameProps {
     readonly game: IGame;
-    readonly popupIsOpen: Property<boolean>;
     readonly onOpenByAction: (action: GameAction | null) => void;
     readonly onDeliteAttribute: (id: number) => void;
     readonly onChangeGameAttributes: (
@@ -25,11 +23,11 @@ export interface GameProps {
 }
 
 export const Game = injectable(
+    PopupContainer,
     GamePopupBodyContainer,
-    (GamePopupBodyContainer) =>
+    (PopupContainer, GamePopupBodyContainer) =>
         ({
             game,
-            popupIsOpen,
             onOpenByAction,
             onDeliteAttribute,
             onChangeGameAttributes,
@@ -174,9 +172,9 @@ export const Game = injectable(
                                 </div>
                             ))}
                     </div>
-                    <Popup title="TEST" isOpen={popupIsOpen}>
+                    <PopupContainer>
                         <GamePopupBodyContainer />
-                    </Popup>
+                    </PopupContainer>
                 </div>
             );
         }

@@ -108,3 +108,25 @@ interface ChangePriority {
     kind: 'change priority';
     imgId: number;
 }
+
+export const getPopupTitle = (action: GameAction | null) => {
+    switch (action) {
+        case 'title change':
+            return 'Изменение основных характеристик';
+        case 'save changes':
+            return 'Сохранить изменения';
+        case 'error':
+            return 'Ууупс ошибка';
+        case 'add characteristics':
+            return 'Добавить характеристики';
+        case 'upload file':
+            return 'Загрузить фото';
+        default:
+            switch (action?.kind) {
+                case 'change priority':
+                    return 'Изменить приоритет';
+                default:
+                    return 'Ууупс';
+            }
+    }
+};
