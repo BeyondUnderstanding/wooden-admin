@@ -7,7 +7,7 @@ const headerProps: HeaderProps = {
         { route: '', label: 'Заказы' },
         { route: '/games', label: 'Игры' },
         { route: '/timeslots', label: 'Таймслоты' },
-        { route: '/newsletters', label: 'Рассылки' },
+        // { route: '/newsletters', label: 'Рассылки' },
     ],
 };
 
