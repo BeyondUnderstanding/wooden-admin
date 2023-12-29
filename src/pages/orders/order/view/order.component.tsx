@@ -3,11 +3,7 @@ import { Order as IOrder } from '../../domain/model/orders.model';
 import { Button } from '../../../../components/button/button.component';
 import { constVoid } from 'fp-ts/lib/function';
 import ProductCard from '../product-card/product-card.component';
-
-interface GetDateTimeProps {
-    startDate: Date;
-    endDate: Date;
-}
+import { getDateTime } from '../../../../utils/date.utils';
 
 interface OrderProps extends IOrder {}
 
@@ -26,22 +22,6 @@ export const Order = ({
     legalId,
     games,
 }: OrderProps) => {
-    console.log(games);
-    const addZeroBefore = (dateAtribut: number) => {
-        return dateAtribut < 10 ? '0' + dateAtribut : dateAtribut;
-    };
-    const getDateTime = ({ startDate, endDate }: GetDateTimeProps) => {
-        return `
-                ${addZeroBefore(startDate.getDate())}.
-                ${addZeroBefore(startDate.getMonth())}.
-                ${startDate.getFullYear()} 
-                ${addZeroBefore(startDate.getHours())} :
-                ${addZeroBefore(startDate.getMinutes())} -
-                ${addZeroBefore(endDate.getHours())} :
-                ${addZeroBefore(endDate.getMinutes())}
-            `;
-    };
-
     return (
         <div className={css.wrap}>
             <div className={css.headline}>
