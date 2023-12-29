@@ -2,3 +2,70 @@
     display: flex;
     justify-content: space-between;
 }
+
+.alarmColor {
+    color: #f00;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+}
+
+.input {
+    border-radius: 12px;
+    border: none;
+    max-width: 328px;
+    width: 100%;
+    padding: 11px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--Primary, #120f07);
+    background: var(--White, #fff);
+    outline: none;
+}
+
+.inputWrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bodyWrap {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.textarea {
+    border-radius: 12px;
+    border: none;
+    max-width: 328px;
+    width: 100%;
+    padding: 11px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--Primary, #120f07);
+    background: var(--White, #fff);
+    height: 150px;
+    resize: none;
+    outline: none;
+}
+
+.characteristicsWrap {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.fileInput {
+    display: none;
+}
+
+.fileLabel {
+    width: 100%;
+    border: 1px dashed rgba(70, 163, 78, 0.653);
+    color: rgba(70, 163, 78, 0.653);
+    border-radius: 16px;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

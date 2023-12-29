@@ -9,7 +9,6 @@ export interface GamesAPI {
 }
 
 export interface Games extends ObjectWithId {
-    id: number;
     title: string;
     price: number;
     isSeleted: boolean;
@@ -17,7 +16,9 @@ export interface Games extends ObjectWithId {
 }
 
 export const mapGames = (game: GamesAPI): Games => ({
-    ...game,
+    id: game.id,
+    title: game.title,
+    price: game.price,
     isSeleted: game.is_deleted,
     isBonusGame: game.is_bonus_game,
 });
@@ -42,24 +43,28 @@ export interface GameAPI {
     }>;
 }
 
+export interface Attributes {
+    id: number;
+    name: string;
+    value: string;
+    isMain: boolean;
+    localeState?: 'new' | 'deleted';
+}
+interface Image {
+    id: number;
+    gameId: number;
+    link: string;
+    priority: number;
+}
+
 export interface Game {
     title: string;
     description: string;
     price: number;
     id: number;
     salesCount: number;
-    images: Array<{
-        id: number;
-        gameId: number;
-        link: string;
-        priority: number;
-    }>;
-    attributes: Array<{
-        id: 0;
-        name: string;
-        value: string;
-        isMain: false;
-    }>;
+    images: Array<Image>;
+    attributes: Array<Attributes>;
 }
 
 export const mapGame = (game: GameAPI): Game => ({
@@ -93,4 +98,37 @@ export const emptyGame = (): Game => ({
 });
 
 // action region
-export type GameAction = 'title change';
+export type GameAction =
+    | 'title change'
+    | 'save changes'
+    | 'error'
+    | 'add characteristics'
+    | 'upload file'
+    | ChangePriority;
+
+interface ChangePriority {
+    kind: 'change priority';
+    imgId: number;
+}
+
+export const getPopupTitle = (action: GameAction | null) => {
+    switch (action) {
+        case 'title change':
+            return 'Изменение основных характеристик';
+        case 'save changes':
+            return 'Сохранить изменения';
+        case 'error':
+            return 'Ууупс ошибка';
+        case 'add characteristics':
+            return 'Добавить характеристики';
+        case 'upload file':
+            return 'Загрузить фото';
+        default:
+            switch (action?.kind) {
+                case 'change priority':
+                    return 'Изменить приоритет';
+                default:
+                    return 'Ууупс';
+            }
+    }
+};
