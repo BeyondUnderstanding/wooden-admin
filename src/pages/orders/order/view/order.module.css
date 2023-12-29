@@ -77,17 +77,17 @@
             flex-direction: column;
             padding: 8px;
             gap: 10px;
-            
-            .headline{
+
+            .headline {
                 display: flex;
-                gap:10px;
+                gap: 10px;
                 flex-direction: row;
 
-                .bonusLabel{
+                .bonusLabel {
                     padding: 0px 12px;
                     text-align: center;
                     border-radius: 10px;
-                    background: #90FF8D;
+                    background: #90ff8d;
                     width: 66px;
                 }
 
@@ -95,7 +95,7 @@
                     font-family: 'ClashDisplay-Semibold';
                     font-size: 14px;
                 }
-                p{
+                p {
                     font-family: 'ClashDisplay-Light';
                     font-size: 14px;
                 }

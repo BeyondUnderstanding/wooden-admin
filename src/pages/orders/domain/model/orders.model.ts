@@ -53,7 +53,7 @@ export const mapOrders = (data: OrdersAPI): Orders => ({
 
 interface Image {
     id: number;
-    game_id: number;
+    gameId: number;
     link: string;
     priority: number;
 }
@@ -71,7 +71,6 @@ export interface ProductCard {
     gamePriceBefore: number;
     gamePriceAfter: number;
 }
-
 
 export interface OrderAPI {
     id: number;
@@ -130,7 +129,7 @@ export const mapOrder = (data: OrderAPI): Order => ({
     hasBonusGame: data.has_bonus_game,
     bonusGame: data.bonus_game,
     games: data.games.map((game) => ({
-        game:game.game,
+        game: game.game,
         gamePriceBefore: game.game_price_before,
         gamePriceAfter: game.game_price_after,
     })),

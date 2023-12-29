@@ -111,11 +111,8 @@ export const Order = ({
                 </div>
             </div>
             <div className={css.products}>
-                
                 {games.map((productCard, id) => (
-
-                        <ProductCard productCard={...roductCard} id={id}/>
-                        
+                    <ProductCard productCard={productCard} id={id} />
                 ))}
             </div>
         </div>

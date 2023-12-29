@@ -1,44 +1,44 @@
 .card {
+    display: flex;
+    padding: 10px;
+    gap: 10px;
+
+    .image {
+        width: 88px;
+        height: 82.955px;
+    }
+    .info {
         display: flex;
-        padding: 10px;
+        flex-direction: column;
+        padding: 8px;
         gap: 10px;
 
-        .image {
-            width: 88px;
-            height: 82.955px;
-        }
-        .info {
+        .headline {
             display: flex;
-            flex-direction: column;
-            padding: 8px;
             gap: 10px;
-            
-            .headline{
-                display: flex;
-                gap:10px;
-                flex-direction: row;
+            flex-direction: row;
 
-                .bonusLabel{
-                    padding: 0px 12px;
-                    text-align: center;
-                    border-radius: 10px;
-                    background: #90FF8D;
-                    width: 66px;
-                }
-
-                h4 {
-                    font-family: 'ClashDisplay-Semibold';
-                    font-size: 14px;
-                }
-                p{
-                    font-family: 'ClashDisplay-Light';
-                    font-size: 14px;
-                }
+            .bonusLabel {
+                padding: 0px 12px;
+                text-align: center;
+                border-radius: 10px;
+                background: #90ff8d;
+                width: 66px;
             }
 
+            h4 {
+                font-family: 'ClashDisplay-Semibold';
+                font-size: 14px;
+            }
             p {
-                font-family: 'ClashDisplay-Medium';
+                font-family: 'ClashDisplay-Light';
                 font-size: 14px;
             }
         }
+
+        p {
+            font-family: 'ClashDisplay-Medium';
+            font-size: 14px;
+        }
     }
+}
