@@ -42,3 +42,6 @@
         }
     }
 }
+.disabled {
+    display: none;
+}

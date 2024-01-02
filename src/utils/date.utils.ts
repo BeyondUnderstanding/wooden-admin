@@ -4,8 +4,8 @@ interface GetDateTimeProps {
 }
 
 const addZeroBefore = (dateAtribut: number) => {
-        return dateAtribut < 10 ? '0' + dateAtribut : dateAtribut;
-    };
+    return dateAtribut < 10 ? '0' + dateAtribut : dateAtribut;
+};
 export const getDateTime = ({ startDate, endDate }: GetDateTimeProps) => {
     return `
             ${addZeroBefore(startDate.getDate())}.
