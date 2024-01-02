@@ -92,7 +92,7 @@ export const Order = ({
             </div>
             <div className={css.products}>
                 {games.map((productCard, id) => (
-                    <ProductCard productCard={productCard} id={id} />
+                    <ProductCard productCard={productCard} key={id}  isBonus ={false}/>
                 ))}
             </div>
         </div>
