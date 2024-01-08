@@ -4,10 +4,16 @@ import { Button } from '../../../../components/button/button.component';
 import { constVoid } from 'fp-ts/lib/function';
 import ProductCard from '../product-card/product-card.component';
 import { getDateTime } from '../../../../utils/date.utils';
+import { PopupContainer } from '../../../../components/popup/popup.container';
+import { injectable} from '@injectable-ts/core';
+import { OrderPopup } from '../popup/order-popup.component';
 
-interface OrderProps extends IOrder {}
+interface OrderProps extends IOrder {
+    readonly testOpenPopup : () => void;
 
-export const Order = ({
+}
+
+export const Order = injectable(PopupContainer,OrderPopup,(PopupContainer,Popup) =>({ //context as your name
     id,
     startDate,
     endDate,
@@ -21,15 +27,44 @@ export const Order = ({
     clientEmail,
     legalId,
     games,
+    testOpenPopup
 }: OrderProps) => {
     return (
         <div className={css.wrap}>
+            <div className={css.popupWrap}>
+                <div className={css.popupWrapBlur}></div>
+                <div className={css.popup}>
+                    <h2>Отменить заказ № {id}</h2>
+                    <p className={css.warming}>Это необратимое действие.</p>
+                    <div className={css.checkBoxWrap}>
+                        <input type="checkbox"/>
+                        <label> Вернуть деньги</label>
+                    </div>
+                    <div className={css.actions}>
+                        <Button
+                            label={'Нет'}
+                            onClick={constVoid}
+                            size="small"
+                            disabled={false}
+                            type={'def'}
+                        />
+
+                        <Button
+                            label={'Отменить заказ'}
+                            onClick={constVoid}
+                            size="small"
+                            disabled={false}
+                            type={'prime'}
+                        />
+                    </div>
+                </div>
+            </div>
             <div className={css.headline}>
                 <h2>Заказ № {id}</h2>
                 <div className={css.actions}>
                     <Button
                         label={'Отменить'}
-                        onClick={constVoid}
+                        onClick={testOpenPopup}
                         size="small"
                         disabled={false}
                         type={'prime'}
@@ -95,6 +130,10 @@ export const Order = ({
                     <ProductCard productCard={productCard} key={id}  isBonus ={false}/>
                 ))}
             </div>
+            <PopupContainer>
+                <Popup/>
+            </PopupContainer>
         </div>
+
     );
-};
+});

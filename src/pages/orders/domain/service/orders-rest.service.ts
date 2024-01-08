@@ -26,6 +26,8 @@ export interface OrdersService {
     readonly getById: (
         params: Params<string>
     ) => Promise<Either<string, Order>>;
+
+    readonly CanelOrder: () => void;
 }
 
 const API = {
@@ -77,4 +79,10 @@ export const newOrdersService = (): OrdersService => ({
                 );
             });
     },
+
+    CanelOrder: () =>{
+    console.log('Order cancelled')
+    },
+
+
 });

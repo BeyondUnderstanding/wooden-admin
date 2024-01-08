@@ -2,6 +2,7 @@ import { Property } from '@frp-ts/core';
 import css from './popup.module.css';
 import { useProperty } from '@frp-ts/react';
 
+
 export interface PopupProps {
     readonly title: string;
     readonly children: React.ReactNode;
@@ -19,3 +20,5 @@ export const Popup = ({ title, children, isOpen }: PopupProps) => {
         </div>
     ) : null;
 };
+
+
