@@ -1,0 +1,13 @@
+.wrap {
+    width: 135px;
+    height: 135px;
+    border: 1px;
+    background: rgba(18, 15, 7, 0.3);
+}
+.isCurrentMonth {
+    background: rgba(18, 15, 7, 0.1);
+    color: rgba(18, 15, 7, 0.2);
+}
+.notEmpty {
+    background: rgba(18, 15, 7, 0.5);
+}
