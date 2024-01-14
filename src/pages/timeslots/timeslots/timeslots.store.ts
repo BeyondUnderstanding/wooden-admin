@@ -59,6 +59,7 @@ export const newTimeSlotsStore: NewTimeSlotsStore = () => {
             }
             return numberToMonthsIndexes(m + 1);
         });
+
     const decrementMonth = () =>
         month.modify((m) => {
             if (m - 1 < 0) {
@@ -87,7 +88,10 @@ export const newTimeSlotsStore: NewTimeSlotsStore = () => {
                                     )}`
                                 ];
                             const occupiedGames: Array<Game> = !!calendarCell
-                                ? calendarCell.map((cell) => cell.game)
+                                ? calendarCell.map((cell) => ({
+                                      ...cell.game,
+                                      datetime: cell.datetime,
+                                  }))
                                 : [];
 
                             return {
@@ -105,7 +109,6 @@ export const newTimeSlotsStore: NewTimeSlotsStore = () => {
     const asideDataEffect = pipe(
         asideDateEffect,
         tap((occupiedGames) => {
-            console.log(occupiedGames);
             games.set(occupiedGames);
         })
     );

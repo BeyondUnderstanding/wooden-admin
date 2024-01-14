@@ -53,6 +53,18 @@ export interface DayInCalendar {
 
 export type Calendar = Array<DayInCalendar>;
 
+export function formatDate(inputDate: string): string {
+    const inputDateTime: Date = new Date(inputDate);
+
+    if (isNaN(inputDateTime.getTime())) {
+        throw new Error('Некорректный формат даты');
+    }
+
+    const formattedDate: string = inputDateTime.toISOString().split('T')[0];
+
+    return formattedDate;
+}
+
 export const getDaysInMonth = (year: number, month: number) =>
     new Date(year, month + 1, 0).getDate();
 
@@ -120,6 +132,7 @@ export interface Game {
         link: string;
         priority: number;
     }>;
+    datetime: string;
 }
 
 export interface GridData {
