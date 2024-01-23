@@ -1,33 +1,8 @@
 export type MonthsIndexes = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11;
 export const numberToMonthsIndexes = (month: number): MonthsIndexes => {
-    switch (month) {
-        case 0:
-            return 0;
-        case 1:
-            return 1;
-        case 2:
-            return 2;
-        case 3:
-            return 3;
-        case 4:
-            return 4;
-        case 5:
-            return 5;
-        case 6:
-            return 6;
-        case 7:
-            return 7;
-        case 8:
-            return 8;
-        case 9:
-            return 9;
-        case 10:
-            return 10;
-        case 11:
-            return 11;
-        default:
-            return 0;
-    }
+    if (month < 12) {
+        return month as MonthsIndexes;
+    } else return 0;
 };
 
 export const months = [
@@ -46,7 +21,7 @@ export const months = [
 ];
 
 export interface DayInCalendar {
-    readonly occupiedGames: Array<Game>;
+    readonly occupiedGames: Array<Game | 'closed slot'>;
     readonly day: number;
     readonly isCurrentMonth: boolean;
 }
@@ -133,11 +108,15 @@ export interface Game {
         priority: number;
     }>;
     datetime: string;
+    game_to_book: {
+        book_id: number;
+    };
 }
 
 export interface GridData {
-    game: Game;
+    game: Game | null;
     datetime: string;
+    orderId: number;
 }
 
 export interface GridDataResponse {
@@ -151,3 +130,13 @@ export const formatCalendarNumberToStr = (n: number): string => {
         return `${n}`;
     }
 };
+
+export const DateStringToISODateStringWithoutTineZone = (
+    date: string
+): string => {
+    return new Date(date).toISOString().slice(0, -1);
+};
+
+// end region
+
+export type TimeSlotsActions = 'close slote' | null;

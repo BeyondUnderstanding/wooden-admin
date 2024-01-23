@@ -47,8 +47,9 @@ export const newGamePopupViewModel: NewGamePopupViewModel = (initData) => {
                     e.length > 0
                         ? Math.max(...e.map((d) => d.id)) + 1
                         : initData.attributes.length > 0
-                        ? Math.max(...initData.attributes.map((d) => d.id)) + 1
-                        : 1,
+                          ? Math.max(...initData.attributes.map((d) => d.id)) +
+                            1
+                          : 1,
                 name: '',
                 value: '',
                 isMain: false,

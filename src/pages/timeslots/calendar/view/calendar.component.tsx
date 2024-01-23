@@ -15,7 +15,10 @@ export const Calendar = injectable(
                 <div>
                     <div className={css.calendarWrap}>
                         {calendarData.map((date) => (
-                            <CalendarDayContainer {...date} />
+                            <CalendarDayContainer
+                                {...date}
+                                key={date.day + `${date.isCurrentMonth}`}
+                            />
                         ))}
                     </div>
                 </div>

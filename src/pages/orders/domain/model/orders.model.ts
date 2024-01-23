@@ -32,6 +32,7 @@ export interface OrderAPI {
     managers_count: number;
     total_price: number;
     has_bonus_game: boolean;
+    prepayment_done: boolean;
 }
 
 export const mapOrder = (data: OrderAPI): Order => ({
@@ -40,7 +41,7 @@ export const mapOrder = (data: OrderAPI): Order => ({
     clientPhone: data.client_phone,
     clientEmail: data.client_email,
     startDate: new Date(data.start_date),
-    isPayed: data.is_payed,
+    isPayed: data.is_payed || data.prepayment_done,
     isCanceled: data.is_canceled,
     totalPrice: data.total_price,
     endDate: new Date(data.end_date),

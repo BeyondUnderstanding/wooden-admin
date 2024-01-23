@@ -6,7 +6,7 @@ import { ReservetedGames } from './reservated-games.component';
 import { Game } from '../timeslots/timeslots.model';
 
 interface ReservetedGamesData {
-    readonly games: Property<Array<Game>>;
+    readonly games: Property<Array<Game | 'closed slot'>>;
     readonly datetime: Property<string>;
 }
 

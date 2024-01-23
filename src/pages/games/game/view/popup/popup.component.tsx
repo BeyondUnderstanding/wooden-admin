@@ -28,7 +28,6 @@ export const GamePopupBody = ({
     onChange,
     onCancel,
     onSave,
-    initData,
     imgUpload,
     imgUploadSave,
     imgUpdatePrioritySave,
