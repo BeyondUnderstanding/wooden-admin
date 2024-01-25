@@ -38,7 +38,7 @@ const router = createBrowserRouter([
             {
                 path: 'order/:id',
                 loader: ({ params }) => orderService.getById(params),
-                element: <OrderContainer service={orderService}/>,
+                element: <OrderContainer service={orderService} />,
             },
             {
                 path: '/games',

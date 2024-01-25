@@ -23,11 +23,20 @@ export interface OrdersService {
         payed_only?: boolean,
         active_only?: boolean
     ) => Stream<Either<string, ReadonlyArray<Orders>>>;
+
     readonly getById: (
         params: Params<string>
     ) => Promise<Either<string, Order>>;
 
-    readonly CanelOrder: () => void;
+    readonly CancelOrder:(
+        id: number,
+        needRefund:boolean,
+    ) => Stream<Either<string, string>>;
+
+    readonly Prepayment:(
+        id:number,
+    ) => Stream<Either<string, number>>;
+
 }
 
 const API = {
@@ -80,9 +89,26 @@ export const newOrdersService = (): OrdersService => ({
             });
     },
 
-    CanelOrder: () =>{
-    console.log('Order cancelled')
+    CancelOrder: ( id, needRefund) => {
+      return fromPromise((axios
+                .delete<string>(`${API.orders}/${id}/cancel?need_refund=${needRefund}`, {
+                    headers: {
+                        Authorization: `Bearer ${Cookies.get('access_token')}`,
+                    },
+                })
+                .then((resp) => either.right(resp.data))
+                .catch((_) => either.left('The order was not canceled'))))
+        
     },
 
-
+    Prepayment: (id) => {
+        return fromPromise((axios
+                .patch<number>(`${API.orders}/${id}/prepayment`, {}, {
+                    headers: {
+                        Authorization: `Bearer ${Cookies.get('access_token')}`,
+                    },
+                })
+                .then((resp) => either.right(resp.data))
+                .catch((_) => either.left('Order is not prepayment'))))
+    },
 });

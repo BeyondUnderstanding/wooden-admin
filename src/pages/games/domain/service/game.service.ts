@@ -230,6 +230,7 @@ export const newGamesService = (): GamesService => ({
     },
     deleteFile: (id) => {
         return fromPromise(
+            // promise -> stream
             axios
                 .delete<{
                     id: number;

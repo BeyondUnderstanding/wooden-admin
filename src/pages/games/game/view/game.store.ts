@@ -161,8 +161,9 @@ export const newGameStore: NewGameStore = (service, initGame) => {
     );
 
     const deleteImgEffect = pipe(
+        // функция = (нач знач) => {func,func,func...};
         imgDeleteEvent,
-        chain((id) => service.deleteFile(id)),
+        chain((id) => service.deleteFile(id)), // chain streams
         tap(
             flow(
                 either.fold(exeption, (id) => {

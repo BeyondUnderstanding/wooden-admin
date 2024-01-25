@@ -1,139 +1,129 @@
 import css from './order.module.css';
-import { Order as IOrder } from '../../domain/model/orders.model';
+import { Order as IOrder, OrderAction } from '../../domain/model/orders.model';
 import { Button } from '../../../../components/button/button.component';
 import { constVoid } from 'fp-ts/lib/function';
 import ProductCard from '../product-card/product-card.component';
 import { getDateTime } from '../../../../utils/date.utils';
 import { PopupContainer } from '../../../../components/popup/popup.container';
-import { injectable} from '@injectable-ts/core';
+import { injectable } from '@injectable-ts/core';
 import { OrderPopup } from '../popup/order-popup.component';
+import { OrderPopupContainer } from '../popup/order-popup.container';
 
 interface OrderProps extends IOrder {
-    readonly testOpenPopup : () => void;
-
+    readonly onOpenByAction: (action: OrderAction | null) => void;
 }
 
-export const Order = injectable(PopupContainer,OrderPopup,(PopupContainer,Popup) =>({ //context as your name
-    id,
-    startDate,
-    endDate,
-    hasManager,
-    managersCount,
-    hasBonusGame,
-    bonusGame,
-    totalPrice,
-    clientName,
-    clientPhone,
-    clientEmail,
-    legalId,
-    games,
-    testOpenPopup
-}: OrderProps) => {
-    return (
-        <div className={css.wrap}>
-            <div className={css.popupWrap}>
-                <div className={css.popupWrapBlur}></div>
-                <div className={css.popup}>
-                    <h2>Отменить заказ № {id}</h2>
-                    <p className={css.warming}>Это необратимое действие.</p>
-                    <div className={css.checkBoxWrap}>
-                        <input type="checkbox"/>
-                        <label> Вернуть деньги</label>
+export const Order = injectable(
+    PopupContainer,
+    OrderPopupContainer,
+    (PopupContainer, Popup) =>
+        ({
+            //context as your name
+            id,
+            startDate,
+            endDate,
+            hasManager,
+            managersCount,
+            hasBonusGame,
+            bonusGame,
+            totalPrice,
+            clientName,
+            clientPhone,
+            clientEmail,
+            legalId,
+            games,
+            onOpenByAction,
+        }: OrderProps) => {
+            return (
+                <div className={css.wrap}>
+                    <div className={css.headline}>
+                        <h2>Заказ № {id}</h2>
+                        <div className={css.actions}>
+                            <Button
+                                label={'Отменить'}
+                                onClick={() =>
+                                    onOpenByAction({
+                                        kind: 'canel the order',
+                                        id,
+                                    })
+                                }
+                                size="small"
+                                disabled={false}
+                                type={'prime'}
+                            />
+                            <Button
+                                label={'Отправить смс'}
+                                onClick={constVoid}
+                                size="small"
+                                disabled={false}
+                                type={'def'}
+                            />
+                            <Button
+                                label={'Переместить'}
+                                onClick={constVoid}
+                                size="small"
+                                disabled={false}
+                                type={'def'}
+                            />
+                            <Button
+                                label={'Изменить бонус'}
+                                onClick={constVoid}
+                                size="small"
+                                disabled={false}
+                                type={'def'}
+                            />
+                            <Button
+                                label={'Предоплачен'}
+                                onClick={() =>
+                                    onOpenByAction('prepaid')}
+                                size="small"
+                                disabled={false}
+                                type={'def'}
+                            />
+                        </div>
                     </div>
-                    <div className={css.actions}>
-                        <Button
-                            label={'Нет'}
-                            onClick={constVoid}
-                            size="small"
-                            disabled={false}
-                            type={'def'}
-                        />
+                    <div className={css.infoBar}>
+                        <div className={css.element}>
+                            <h3>Информация о заказе</h3>
+                            <div className={css.info}>
+                                <p>
+                                    Дата и время:{' '}
+                                    {getDateTime({ startDate, endDate })}
+                                </p>
+                                <p>
+                                    Менеджер:{' '}
+                                    {hasManager ? `Да/${managersCount}` : 'Нет'}
+                                </p>
+                                <p>
+                                    Бонусная игра: {hasBonusGame ? `Да` : 'Нет'}
+                                </p>
+                                <p>Сумма заказа: {totalPrice} ₾</p>
+                            </div>
+                        </div>
 
-                        <Button
-                            label={'Отменить заказ'}
-                            onClick={constVoid}
-                            size="small"
-                            disabled={false}
-                            type={'prime'}
-                        />
+                        <div className={css.element}>
+                            <h3>Информация о пользователе</h3>
+                            <div className={css.info}>
+                                <p>Имя: {clientName}</p>
+                                <p>Номер: {clientPhone}</p>
+                                <p>Почта: {clientEmail}</p>
+                                <p>Паспорт: {legalId}</p>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div className={css.headline}>
-                <h2>Заказ № {id}</h2>
-                <div className={css.actions}>
-                    <Button
-                        label={'Отменить'}
-                        onClick={testOpenPopup}
-                        size="small"
-                        disabled={false}
-                        type={'prime'}
-                    />
-                    <Button
-                        label={'Отправить смс'}
-                        onClick={constVoid}
-                        size="small"
-                        disabled={false}
-                        type={'def'}
-                    />
-                    <Button
-                        label={'Переместить'}
-                        onClick={constVoid}
-                        size="small"
-                        disabled={false}
-                        type={'def'}
-                    />
-                    <Button
-                        label={'Изменить бонус'}
-                        onClick={constVoid}
-                        size="small"
-                        disabled={false}
-                        type={'def'}
-                    />
-                    <Button
-                        label={'Предоплачен'}
-                        onClick={constVoid}
-                        size="small"
-                        disabled={false}
-                        type={'def'}
-                    />
-                </div>
-            </div>
-            <div className={css.infoBar}>
-                <div className={css.element}>
-                    <h3>Информация о заказе</h3>
-                    <div className={css.info}>
-                        <p>
-                            Дата и время: {getDateTime({ startDate, endDate })}
-                        </p>
-                        <p>
-                            Менеджер:{' '}
-                            {hasManager ? `Да/${managersCount}` : 'Нет'}
-                        </p>
-                        <p>Бонусная игра: {hasBonusGame ? `Да` : 'Нет'}</p>
-                        <p>Сумма заказа: {totalPrice} ₾</p>
+                    <div className={css.products}>
+                        {games.map((productCard, id) => (
+                            <ProductCard
+                                productCard={productCard}
+                                key={id}
+                                isBonus={false}
+                            />
+                        ))}
                     </div>
+                    <PopupContainer>
+                        <Popup />
+                    </PopupContainer>
                 </div>
-
-                <div className={css.element}>
-                    <h3>Информация о пользователе</h3>
-                    <div className={css.info}>
-                        <p>Имя: {clientName}</p>
-                        <p>Номер: {clientPhone}</p>
-                        <p>Почта: {clientEmail}</p>
-                        <p>Паспорт: {legalId}</p>
-                    </div>
-                </div>
-            </div>
-            <div className={css.products}>
-                {games.map((productCard, id) => (
-                    <ProductCard productCard={productCard} key={id}  isBonus ={false}/>
-                ))}
-            </div>
-            <PopupContainer>
-                <Popup/>
-            </PopupContainer>
-        </div>
-
-    );
-});
+            );
+        }
+);

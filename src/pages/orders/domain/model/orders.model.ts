@@ -157,3 +157,34 @@ export const emptyOrder = (): Order => ({
         images: [],
     },
 });
+
+export type OrderAction =
+    | 'send a massage'
+    | 'remove'
+    | 'change bonus'
+    | 'prepaid'
+    | 'show massage'
+    | { kind: 'canel the order'; id: number };
+
+
+export const getOrderPopupTitle = (action: OrderAction | null) => {
+    switch (action) {
+        case 'send a massage':
+            return 'Отправить сообщение?';
+        case 'remove':
+            return 'Изменить адрес?';
+        case 'change bonus':
+            return 'Изменить бонус?';
+        case 'prepaid':
+            return 'Установить статус "Предоплачен?"';
+        case 'show massage':
+            return 'Заказ удален';
+        default:
+            switch (action?.kind) {
+                case 'canel the order':
+                    return `Отменить заказ ${action.id}?`;
+                default:
+                    return '';
+            }
+    }
+};
