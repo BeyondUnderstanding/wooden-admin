@@ -10,6 +10,10 @@ import { GamesContainer } from './pages/games/view/games.container';
 import { GameContainer } from './pages/games/game/view/game.container';
 import { newGamesService } from './pages/games/domain/service/game.service';
 import { newGamesStore } from './pages/games/view/games.store';
+import { newOrdersService } from './pages/orders/domain/service/orders-rest.service';
+import { OrderContainer } from './pages/orders/order/view/order.container';
+import { TimeslotsContainer } from './pages/timeslots/timeslots/timeslots.container';
+
 const loader = async () => {
     if (!Cookies.get('access_token')) {
         return redirect('../login');

@@ -81,6 +81,7 @@ export interface OrderAPI {
     client_phone: string;
     client_email: string;
     is_payed: boolean;
+    prepayment_done: boolean;
     is_refunded: boolean;
     is_canceled: boolean;
     legal_id: string;
@@ -120,7 +121,7 @@ export const mapOrder = (data: OrderAPI): Order => ({
     clientName: data.client_name,
     clientPhone: data.client_phone,
     clientEmail: data.client_email,
-    isPayed: data.is_payed,
+    isPayed: data.is_payed || data.prepayment_done,
     isRefunded: data.is_refunded,
     isCanceled: data.is_canceled,
     legalId: data.legal_id,

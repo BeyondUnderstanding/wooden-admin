@@ -6,7 +6,6 @@ import ProductCard from '../product-card/product-card.component';
 import { getDateTime } from '../../../../utils/date.utils';
 import { PopupContainer } from '../../../../components/popup/popup.container';
 import { injectable } from '@injectable-ts/core';
-import { OrderPopup } from '../popup/order-popup.component';
 import { OrderPopupContainer } from '../popup/order-popup.container';
 
 interface OrderProps extends IOrder {
