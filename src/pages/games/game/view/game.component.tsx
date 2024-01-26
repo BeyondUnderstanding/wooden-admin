@@ -10,6 +10,7 @@ import css from './game.module.css';
 import { Button } from '../../../../components/button/button.component';
 import { GamePopupBodyContainer } from './popup/popup.container';
 import { PopupContainer } from '../../../../components/popup/popup.container';
+import { genLinkToImgProxy, linkToName } from '../../../../utils/img.utils';
 
 export interface GameProps {
     readonly game: IGame;
@@ -88,7 +89,11 @@ export const Game = injectable(
                             {game.images.map((img) => (
                                 <div className={css.imgsWrap} key={img.link}>
                                     <img
-                                        src={img.link}
+                                        src={genLinkToImgProxy({
+                                            name: linkToName(img.link),
+                                            width: 130,
+                                            height: 130,
+                                        })}
                                         alt=""
                                         className={css.img}
                                     />

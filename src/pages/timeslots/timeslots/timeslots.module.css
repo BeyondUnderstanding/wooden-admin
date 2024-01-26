@@ -1,0 +1,8 @@
+.wrapContent {
+    display: flex;
+    width: 100%;
+    gap: 32px;
+}
+.wrap {
+    padding-left: 16px;
+}

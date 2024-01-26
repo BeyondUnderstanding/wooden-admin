@@ -1,0 +1,27 @@
+.wrapControls {
+    margin-bottom: 8px;
+}
+
+.wrap {
+    max-width: 250px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    font-size: 24px;
+    padding-bottom: 16px;
+
+    .leftArrow {
+        transform: rotate(90deg);
+        background-color: transparent;
+    }
+
+    .rightArrow {
+        transform: rotate(-90deg);
+        background-color: transparent;
+    }
+}
+
+.btnWrap {
+    display: flex;
+    gap: 10px;
+}
