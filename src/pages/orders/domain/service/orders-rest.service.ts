@@ -16,6 +16,11 @@ import Cookies from 'js-cookie';
 import { logout } from '../../../../utils/rest.utils';
 import { Params } from 'react-router-dom';
 
+interface PrepaymentResponse{
+    message: string,
+    id: number,
+}
+
 export interface OrdersService {
     readonly getAll: (
         start: number,
@@ -35,7 +40,7 @@ export interface OrdersService {
 
     readonly Prepayment:(
         id:number,
-    ) => Stream<Either<string, number>>;
+    ) => Stream<Either<string, PrepaymentResponse>>;
 
 }
 
@@ -109,6 +114,6 @@ export const newOrdersService = (): OrdersService => ({
                     },
                 })
                 .then((resp) => either.right(resp.data))
-                .catch((_) => either.left('Order is not prepayment'))))
+                .catch((_) => either.left('Order already marked as payed'))))
     },
 });

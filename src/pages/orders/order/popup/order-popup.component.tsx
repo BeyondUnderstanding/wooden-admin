@@ -2,7 +2,7 @@ import { Button } from '../../../../components/button/button.component';
 import css from '../popup/order-popup.module.css';
 import React, { useState } from 'react';
 import { OrderAction } from '../../domain/model/orders.model';
-import { constVoid } from 'fp-ts/lib/function';
+
 
 export interface OrderPopupProps {
     readonly Close: () => void;
@@ -14,6 +14,18 @@ export interface OrderPopupProps {
 export const OrderPopup = ({ Close, Cancel, action, SetPrepayment  }: OrderPopupProps) => {
     const [checkState, setCheckState] = useState(false);
 
+    const OkButton = () => {
+        return (<div className={css.message}>
+                    <Button
+                        label={'Ок'}
+                        onClick={() => Close()}
+                        size="small"
+                        disabled={false}
+                        type={'def'}
+                    />
+                </div>);
+    }
+
     switch (action) {
         case 'send a massage':
             return <>123</>;
@@ -21,6 +33,12 @@ export const OrderPopup = ({ Close, Cancel, action, SetPrepayment  }: OrderPopup
             return <>123</>;
         case 'change bonus':
             return <>123</>;
+        case 'prepaidDone':
+            return <OkButton/>;
+        case 'cancelDone':
+            return <OkButton/>;
+        case 'error':
+            return <OkButton/>;
         case 'prepaid':
             return (
                     <div className={css.popup}>
@@ -43,18 +61,6 @@ export const OrderPopup = ({ Close, Cancel, action, SetPrepayment  }: OrderPopup
                             </div>
                     </div>
                         );
-        case 'show massage':
-            return (
-                <div className={css.message}>
-                    <Button
-                        label={'Ок'}
-                        onClick={() => Close()}
-                        size="small"
-                        disabled={false}
-                        type={'def'}
-                    />
-                </div>
-            );
         default:
             switch (action?.kind) {
                 case 'canel the order':
@@ -90,6 +96,10 @@ export const OrderPopup = ({ Close, Cancel, action, SetPrepayment  }: OrderPopup
                             </div>
                         </div>
                     );
+                case 'show massage':
+            return (
+                <OkButton/>
+            );
                 default:
                     return <>ERROR</>;
             }

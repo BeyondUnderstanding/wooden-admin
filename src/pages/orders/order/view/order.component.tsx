@@ -25,6 +25,8 @@ export const Order = injectable(
             managersCount,
             hasBonusGame,
             bonusGame,
+            isPrepayment,
+            isPayed,
             totalPrice,
             clientName,
             clientPhone,
@@ -33,6 +35,7 @@ export const Order = injectable(
             games,
             onOpenByAction,
         }: OrderProps) => {
+            console.log(isPayed);
             return (
                 <div className={css.wrap}>
                     <div className={css.headline}>
@@ -73,11 +76,12 @@ export const Order = injectable(
                             />
                             <Button
                                 label={'Предоплачен'}
-                                onClick={() =>
-                                    onOpenByAction('prepaid')}
+                                onClick={() =>{
+                                    onOpenByAction('prepaid');}
+                                }
                                 size="small"
                                 disabled={false}
-                                type={'def'}
+                                type={(isPrepayment && !isPayed)?'def':'unclick'}
                             />
                         </div>
                     </div>

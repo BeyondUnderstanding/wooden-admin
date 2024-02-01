@@ -84,6 +84,7 @@ export interface OrderAPI {
     prepayment_done: boolean;
     is_refunded: boolean;
     is_canceled: boolean;
+    is_prepayment: boolean;
     legal_id: string;
     has_manager: boolean;
     managers_count: number;
@@ -106,6 +107,7 @@ export interface Order extends ObjectWithId {
     isPayed: boolean;
     isRefunded: boolean;
     isCanceled: boolean;
+    isPrepayment: boolean;
     legalId: string;
     hasManager: boolean;
     managersCount: number;
@@ -124,6 +126,7 @@ export const mapOrder = (data: OrderAPI): Order => ({
     isPayed: data.is_payed || data.prepayment_done,
     isRefunded: data.is_refunded,
     isCanceled: data.is_canceled,
+    isPrepayment: data.is_prepayment,
     legalId: data.legal_id,
     hasManager: data.has_manager,
     managersCount: data.managers_count,
@@ -147,6 +150,7 @@ export const emptyOrder = (): Order => ({
     isPayed: false,
     isRefunded: false,
     isCanceled: false,
+    isPrepayment:false,
     legalId: '-',
     hasManager: false,
     managersCount: 0,
@@ -165,8 +169,13 @@ export type OrderAction =
     | 'remove'
     | 'change bonus'
     | 'prepaid'
-    | 'show massage'
+    | 'prepaidDone'
+    | 'cancelDone'
+    | 'error'
+    | { kind:'show massage'; message:string}
     | { kind: 'canel the order'; id: number };
+    
+
 
 
 export const getOrderPopupTitle = (action: OrderAction | null) => {
@@ -179,12 +188,18 @@ export const getOrderPopupTitle = (action: OrderAction | null) => {
             return 'Изменить бонус?';
         case 'prepaid':
             return 'Установить статус "Предоплачен?"';
-        case 'show massage':
-            return 'Заказ удален';
+        case 'prepaidDone':
+            return 'Cтатус изменен на "Предоплачен"';
+        case 'cancelDone':
+            return 'Заказ отменен';
+        case 'error':
+            return 'Что-тоо пошло не так ;('
         default:
             switch (action?.kind) {
                 case 'canel the order':
                     return `Отменить заказ ${action.id}?`;
+                case 'show massage':
+                    return action.message;
                 default:
                     return '';
             }

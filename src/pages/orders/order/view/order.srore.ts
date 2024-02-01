@@ -13,6 +13,7 @@ import {
 import { createAdapter } from '@most/adapter';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { tap, chain } from '@most/core';
+import { either } from 'fp-ts';
 
 export interface OrderStore {
     readonly popupIsOpen: Property<boolean>;
@@ -34,31 +35,33 @@ export const newOrderStore: NewOrderStore = (service, initOrder) => {
     const popupIsOpen = newLensedAtom(false);
     const popupTitle = newLensedAtom<string>('');
     const id = newLensedAtom<number>(initOrder.id);
-    
-
     const [onOpenByAction, onOpenByActionEvent] =
         createAdapter<OrderAction | null>();
     const [orderCancel, orderCancelEvent] = createAdapter<boolean>();
     const [isOrderPrepayment, isOrderPrepaymentEvent] = createAdapter<string>();
+    
 
 
     const isOrderPrepaymenteffect = pipe(
         isOrderPrepaymentEvent,
         chain(() => service.Prepayment(id.get())),
-        tap(flow(
-            () => popupIsOpen.set(false),
-            () => onOpenByAction('show massage')
-        ))
+        tap((response) => pipe(response,either.fold(
+            ()=>{onOpenByAction('error')},
+            ()=>{onOpenByAction('prepaidDone')}))
+        )
     )
+
     const cancelOrderEffect = pipe(
         // функция = (нач знач) => {func,func,func...};
         orderCancelEvent,
         chain((needRefund: boolean) => service.CancelOrder(id.get(), needRefund)),
-        tap(
-            flow(
-                () => popupIsOpen.set(false),
-                () => onOpenByAction('show massage'))),
+        tap((response) => pipe(response,either.fold(
+            ()=>{onOpenByAction('error')},
+            ()=>{onOpenByAction('cancelDone')})
+        )
+        )
     )
+
 
     const actionChangeEvent = pipe(
         onOpenByActionEvent,
@@ -66,6 +69,7 @@ export const newOrderStore: NewOrderStore = (service, initOrder) => {
             activeAction.set(action);
             popupIsOpen.set(!!action);
             popupTitle.set(getOrderPopupTitle(action));
+
         })
     );
 
@@ -79,6 +83,7 @@ export const newOrderStore: NewOrderStore = (service, initOrder) => {
             isOrderPrepayment,
             id,
             activeAction,
+           
             
         },
         actionChangeEvent,
@@ -86,3 +91,4 @@ export const newOrderStore: NewOrderStore = (service, initOrder) => {
         isOrderPrepaymenteffect,
     ); // object , streams
 };
+

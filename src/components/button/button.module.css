@@ -57,3 +57,8 @@
 .link:hover {
     background: transparent;
 }
+
+.unclickuble{
+        background-color: gray;
+        pointer-events: none;
+    }
