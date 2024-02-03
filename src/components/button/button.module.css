@@ -58,7 +58,7 @@
     background: transparent;
 }
 
-.unclickuble{
-        background-color: gray;
-        pointer-events: none;
-    }
+.unclickuble {
+    background-color: gray;
+    pointer-events: none;
+}

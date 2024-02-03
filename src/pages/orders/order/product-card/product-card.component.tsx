@@ -32,10 +32,10 @@ const ProductCard = ({ productCard, isBonus }: ProductCardProps) => {
         <div className={css.card}>
             <img
                 src={genLinkToImgProxy({
-                name: linkToName(productCard.game.images[0].link),
-                width: 88,
-                height: 83,
-            })}
+                    name: linkToName(productCard.game.images[0].link),
+                    width: 88,
+                    height: 83,
+                })}
                 alt="Game img"
             />
             <div className={css.info}>

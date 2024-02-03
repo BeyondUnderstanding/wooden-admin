@@ -55,7 +55,9 @@ export const Order = injectable(
                             />
                             <Button
                                 label={'Отправить смс'}
-                                onClick={() => {onOpenByAction('send a massage')}}
+                                onClick={() => {
+                                    onOpenByAction('send a massage');
+                                }}
                                 size="small"
                                 disabled={false}
                                 type={'def'}
@@ -76,12 +78,14 @@ export const Order = injectable(
                             />
                             <Button
                                 label={'Предоплачен'}
-                                onClick={() =>{
-                                    onOpenByAction('prepaid');}
-                                }
+                                onClick={() => {
+                                    onOpenByAction('prepaid');
+                                }}
                                 size="small"
                                 disabled={false}
-                                type={(isPrepayment && !isPayed)?'def':'unclick'}
+                                type={
+                                    isPrepayment && !isPayed ? 'def' : 'unclick'
+                                }
                             />
                         </div>
                     </div>

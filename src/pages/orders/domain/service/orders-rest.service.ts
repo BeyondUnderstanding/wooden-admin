@@ -16,9 +16,9 @@ import Cookies from 'js-cookie';
 import { logout } from '../../../../utils/rest.utils';
 import { Params } from 'react-router-dom';
 
-interface PrepaymentResponse{
-    message: string,
-    id: number,
+interface PrepaymentResponse {
+    message: string;
+    id: number;
 }
 
 export interface OrdersService {
@@ -33,20 +33,19 @@ export interface OrdersService {
         params: Params<string>
     ) => Promise<Either<string, Order>>;
 
-    readonly CancelOrder:(
+    readonly CancelOrder: (
         id: number,
-        needRefund:boolean,
+        needRefund: boolean
     ) => Stream<Either<string, string>>;
 
-    readonly Prepayment:(
-        id:number,
+    readonly Prepayment: (
+        id: number
     ) => Stream<Either<string, PrepaymentResponse>>;
 
-    readonly SendMessage :(
+    readonly SendMessage: (
         id: number,
-        message: string,
-    ) => Stream<Either<string,string>>;
-
+        message: string
+    ) => Stream<Either<string, string>>;
 }
 
 const API = {
@@ -99,36 +98,53 @@ export const newOrdersService = (): OrdersService => ({
             });
     },
 
-    CancelOrder: ( id, needRefund) => {
-      return fromPromise((axios
-                .delete<string>(`${API.orders}/${id}/cancel?need_refund=${needRefund}`, {
-                    headers: {
-                        Authorization: `Bearer ${Cookies.get('access_token')}`,
-                    },
-                })
+    CancelOrder: (id, needRefund) => {
+        return fromPromise(
+            axios
+                .delete<string>(
+                    `${API.orders}/${id}/cancel?need_refund=${needRefund}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${Cookies.get('access_token')}`,
+                        },
+                    }
+                )
                 .then((resp) => either.right(resp.data))
-                .catch((_) => either.left('The order was not canceled'))))
-        
+                .catch((_) => either.left('The order was not canceled'))
+        );
     },
 
     Prepayment: (id) => {
-        return fromPromise((axios
-                .patch<PrepaymentResponse>(`${API.orders}/${id}/prepayment`, {}, {
-                    headers: {
-                        Authorization: `Bearer ${Cookies.get('access_token')}`,
-                    },
-                })
+        return fromPromise(
+            axios
+                .patch<PrepaymentResponse>(
+                    `${API.orders}/${id}/prepayment`,
+                    {},
+                    {
+                        headers: {
+                            Authorization: `Bearer ${Cookies.get('access_token')}`,
+                        },
+                    }
+                )
                 .then((resp) => either.right(resp.data))
-                .catch((_) => either.left('Order already marked as payed'))))
+                .catch((_) => either.left('Order already marked as payed'))
+        );
     },
 
     SendMessage: (id, message) => {
-        return fromPromise((axios.post<string>(`${API.orders}/${id}/sms`,{message:message},{
-                    headers: {
-                        Authorization: `Bearer ${Cookies.get('access_token')}`,
-                    },
-                })
+        return fromPromise(
+            axios
+                .post<string>(
+                    `${API.orders}/${id}/sms`,
+                    { message: message },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${Cookies.get('access_token')}`,
+                        },
+                    }
+                )
                 .then((resp) => either.right(resp.data))
-                .catch((_) => either.left('Something went wrong'))))
-    }
+                .catch((_) => either.left('Something went wrong'))
+        );
+    },
 });

@@ -150,7 +150,7 @@ export const emptyOrder = (): Order => ({
     isPayed: false,
     isRefunded: false,
     isCanceled: false,
-    isPrepayment:false,
+    isPrepayment: false,
     legalId: '-',
     hasManager: false,
     managersCount: 0,
@@ -173,11 +173,8 @@ export type OrderAction =
     | 'cancelDone'
     | 'sendMessageDone'
     | 'error'
-    | { kind:'show massage'; message:string}
+    | { kind: 'show massage'; message: string }
     | { kind: 'canel the order'; id: number };
-    
-
-
 
 export const getOrderPopupTitle = (action: OrderAction | null) => {
     switch (action) {
@@ -196,7 +193,7 @@ export const getOrderPopupTitle = (action: OrderAction | null) => {
         case 'sendMessageDone':
             return 'Сообщение отпраленно';
         case 'error':
-            return 'Что-тоо пошло не так ;('
+            return 'Что-тоо пошло не так ;(';
         default:
             switch (action?.kind) {
                 case 'canel the order':

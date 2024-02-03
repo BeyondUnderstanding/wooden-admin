@@ -31,7 +31,7 @@
         justify-content: space-between;
     }
 
-    .textAreaMessage{
+    .textAreaMessage {
         resize: none;
         font-size: 17px;
         border: none;
@@ -39,12 +39,13 @@
         padding-left: 14px;
     }
 
-    .textAreaMessage:focus{
+    .textAreaMessage:focus {
         outline: none;
     }
 
-    .textAreaMessage::-webkit-input-placeholder, ::-moz-placeholder { 
-        color: rgb(230,228,221);
+    .textAreaMessage::-webkit-input-placeholder,
+    ::-moz-placeholder {
+        color: rgb(230, 228, 221);
     }
 }
 
@@ -52,5 +53,3 @@
     display: flex;
     justify-content: flex-end;
 }
-
-
