@@ -75,11 +75,11 @@ export const OrderPopup = ({
             return <>123</>;
         case 'change bonus':
             return <>123</>;
-        case 'prepaidDone':
+        case 'prepaid done':
             return <OkButton />;
-        case 'cancelDone':
+        case 'cancel done':
             return <OkButton />;
-        case 'sendMessageDone':
+        case 'send a message done':
             return <OkButton />;
         case 'error':
             return <OkButton />;

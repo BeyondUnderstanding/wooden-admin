@@ -169,9 +169,9 @@ export type OrderAction =
     | 'remove'
     | 'change bonus'
     | 'prepaid'
-    | 'prepaidDone'
-    | 'cancelDone'
-    | 'sendMessageDone'
+    | 'prepaid done'
+    | 'cancel done'
+    | 'send a message done'
     | 'error'
     | { kind: 'show massage'; message: string }
     | { kind: 'canel the order'; id: number };
@@ -186,11 +186,11 @@ export const getOrderPopupTitle = (action: OrderAction | null) => {
             return 'Изменить бонус?';
         case 'prepaid':
             return 'Установить статус "Предоплачен?"';
-        case 'prepaidDone':
+        case 'prepaid done':
             return 'Cтатус изменен на "Предоплачен"';
-        case 'cancelDone':
+        case 'cancel done':
             return 'Заказ отменен';
-        case 'sendMessageDone':
+        case 'send a message done':
             return 'Сообщение отпраленно';
         case 'error':
             return 'Что-тоо пошло не так ;(';
