@@ -1,14 +1,14 @@
+import { genLinkToImgProxy, linkToName } from '../../../../utils/img.utils';
 import { ProductCard as IProductCard } from '../../domain/model/orders.model';
 import css from './product-card.module.css';
 import cn from 'classnames';
 
 interface ProductCardProps {
     readonly productCard: IProductCard;
-    readonly key: number;
     readonly isBonus: boolean;
 }
 
-const ProductCard = ({ productCard, key, isBonus }: ProductCardProps) => {
+const ProductCard = ({ productCard, isBonus }: ProductCardProps) => {
     const renderCoast = (isBonus: boolean) => {
         if (!isBonus) {
             return (
@@ -29,10 +29,13 @@ const ProductCard = ({ productCard, key, isBonus }: ProductCardProps) => {
     };
 
     return (
-        <div className={css.card} key={key}>
+        <div className={css.card}>
             <img
-                className={css.image}
-                src={productCard.game.images[0].link}
+                src={genLinkToImgProxy({
+                name: linkToName(productCard.game.images[0].link),
+                width: 88,
+                height: 83,
+            })}
                 alt="Game img"
             />
             <div className={css.info}>

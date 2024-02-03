@@ -171,6 +171,7 @@ export type OrderAction =
     | 'prepaid'
     | 'prepaidDone'
     | 'cancelDone'
+    | 'sendMessageDone'
     | 'error'
     | { kind:'show massage'; message:string}
     | { kind: 'canel the order'; id: number };
@@ -192,6 +193,8 @@ export const getOrderPopupTitle = (action: OrderAction | null) => {
             return 'Cтатус изменен на "Предоплачен"';
         case 'cancelDone':
             return 'Заказ отменен';
+        case 'sendMessageDone':
+            return 'Сообщение отпраленно';
         case 'error':
             return 'Что-тоо пошло не так ;('
         default:

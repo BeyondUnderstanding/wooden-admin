@@ -55,7 +55,7 @@ export const Order = injectable(
                             />
                             <Button
                                 label={'Отправить смс'}
-                                onClick={constVoid}
+                                onClick={() => {onOpenByAction('send a massage')}}
                                 size="small"
                                 disabled={false}
                                 type={'def'}

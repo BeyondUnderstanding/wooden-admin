@@ -22,9 +22,9 @@ export interface OrderStore {
     readonly activeAction: Property<OrderAction | null>;
     readonly ClosePopup: () => void;
     readonly id: Property<number>;
-    readonly orderCancel: (needRefund:boolean) => void;
-    readonly isOrderPrepayment: (event:string) => void;
-    
+    readonly orderCancel: (needRefund: boolean) => void;
+    readonly isOrderPrepayment: (event: string) => void;
+    readonly sendMessage: (message: string) => void; 
 }
 export interface NewOrderStore {
     (service: OrdersService, initOrder: Order): ValueWithEffect<OrderStore>;
@@ -39,9 +39,15 @@ export const newOrderStore: NewOrderStore = (service, initOrder) => {
         createAdapter<OrderAction | null>();
     const [orderCancel, orderCancelEvent] = createAdapter<boolean>();
     const [isOrderPrepayment, isOrderPrepaymentEvent] = createAdapter<string>();
-    
+    const [sendMessage, sendMessageEvent] = createAdapter<string>();
 
-
+    const sendMessageEffect = pipe(
+        sendMessageEvent,
+        chain ((message:string) => service.SendMessage(id.get(), message)),
+        tap((response) => pipe(response,either.fold(
+            ()=>{onOpenByAction('error')},
+            ()=>{onOpenByAction('sendMessageDone')})))
+    )
     const isOrderPrepaymenteffect = pipe(
         isOrderPrepaymentEvent,
         chain(() => service.Prepayment(id.get())),
@@ -81,6 +87,7 @@ export const newOrderStore: NewOrderStore = (service, initOrder) => {
             ClosePopup: () => onOpenByAction(null),
             orderCancel,
             isOrderPrepayment,
+            sendMessage,
             id,
             activeAction,
            
@@ -89,6 +96,7 @@ export const newOrderStore: NewOrderStore = (service, initOrder) => {
         actionChangeEvent,
         cancelOrderEffect,
         isOrderPrepaymenteffect,
+        sendMessageEffect,
     ); // object , streams
 };
 

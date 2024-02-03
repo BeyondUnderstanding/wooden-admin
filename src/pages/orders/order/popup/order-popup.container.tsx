@@ -12,6 +12,7 @@ export const OrderPopupContainer = injectable(
             Cancel: store.orderCancel,
             action: useProperty(store.activeAction),
             SetPrepayment: store.isOrderPrepayment,
+            SendMessage: store.sendMessage,
         });
     }
 );

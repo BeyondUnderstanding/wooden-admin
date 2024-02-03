@@ -42,6 +42,11 @@ export interface OrdersService {
         id:number,
     ) => Stream<Either<string, PrepaymentResponse>>;
 
+    readonly SendMessage :(
+        id: number,
+        message: string,
+    ) => Stream<Either<string,string>>;
+
 }
 
 const API = {
@@ -108,7 +113,7 @@ export const newOrdersService = (): OrdersService => ({
 
     Prepayment: (id) => {
         return fromPromise((axios
-                .patch<number>(`${API.orders}/${id}/prepayment`, {}, {
+                .patch<PrepaymentResponse>(`${API.orders}/${id}/prepayment`, {}, {
                     headers: {
                         Authorization: `Bearer ${Cookies.get('access_token')}`,
                     },
@@ -116,4 +121,14 @@ export const newOrdersService = (): OrdersService => ({
                 .then((resp) => either.right(resp.data))
                 .catch((_) => either.left('Order already marked as payed'))))
     },
+
+    SendMessage: (id, message) => {
+        return fromPromise((axios.post<string>(`${API.orders}/${id}/sms`,{message:message},{
+                    headers: {
+                        Authorization: `Bearer ${Cookies.get('access_token')}`,
+                    },
+                })
+                .then((resp) => either.right(resp.data))
+                .catch((_) => either.left('Something went wrong'))))
+    }
 });

@@ -9,10 +9,22 @@ export interface OrderPopupProps {
     readonly Cancel: (needRefund: boolean) => void;
     readonly action: OrderAction | null;
     readonly SetPrepayment: (action: string) => void;
+    readonly SendMessage: (message: string) => void; 
 }
 
-export const OrderPopup = ({ Close, Cancel, action, SetPrepayment  }: OrderPopupProps) => {
+export const OrderPopup = ({ 
+    Close, 
+    Cancel, 
+    action, 
+    SetPrepayment,
+    SendMessage,
+}: OrderPopupProps) => {
     const [checkState, setCheckState] = useState(false);
+    const [message, setMessage] = useState('');
+
+    const handleInputChange = (curentMessage: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setMessage(curentMessage.target.value)
+    }
 
     const OkButton = () => {
         return (<div className={css.message}>
@@ -28,7 +40,34 @@ export const OrderPopup = ({ Close, Cancel, action, SetPrepayment  }: OrderPopup
 
     switch (action) {
         case 'send a massage':
-            return <>123</>;
+            return (
+                <div className={css.popup}>
+                    <textarea
+                        value = {message}
+                        onChange = {handleInputChange}
+                        placeholder = 'Текст сообщения'
+                        maxLength = {155}
+                        className = {css.textAreaMessage}
+                    >
+                    </textarea>
+                    <div className={css.actions}>
+                                <Button
+                                    label={'Отменить'}
+                                    onClick={() => Close()}
+                                    size="small"
+                                    disabled={false}
+                                    type={'def'}
+                                />
+
+                                <Button
+                                    label={'Отправить'}
+                                    onClick={() => SendMessage(message)}
+                                    size="small"
+                                    disabled={false}
+                                    type={'prime'}
+                                />
+                        </div>
+                </div>)
         case 'remove':
             return <>123</>;
         case 'change bonus':
@@ -36,6 +75,8 @@ export const OrderPopup = ({ Close, Cancel, action, SetPrepayment  }: OrderPopup
         case 'prepaidDone':
             return <OkButton/>;
         case 'cancelDone':
+            return <OkButton/>;
+        case 'sendMessageDone':
             return <OkButton/>;
         case 'error':
             return <OkButton/>;
@@ -58,7 +99,7 @@ export const OrderPopup = ({ Close, Cancel, action, SetPrepayment  }: OrderPopup
                                     disabled={false}
                                     type={'prime'}
                                 />
-                            </div>
+                        </div>
                     </div>
                         );
         default:
