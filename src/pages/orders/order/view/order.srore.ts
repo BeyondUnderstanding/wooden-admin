@@ -20,7 +20,7 @@ export interface OrderStore {
     readonly popupTitle: Property<string>;
     readonly onOpenByAction: (action: OrderAction | null) => void;
     readonly activeAction: Property<OrderAction | null>;
-    readonly ClosePopup: () => void;
+    readonly closePopup: () => void;
     readonly id: Property<number>;
     readonly orderCancel: (needRefund: boolean) => void;
     readonly isOrderPrepayment: (event: string) => void;
@@ -43,7 +43,7 @@ export const newOrderStore: NewOrderStore = (service, initOrder) => {
 
     const sendMessageEffect = pipe(
         sendMessageEvent,
-        chain((message: string) => service.SendMessage(id.get(), message)),
+        chain((message: string) => service.sendMessage(id.get(), message)),
         tap((response) =>
             pipe(
                 response,
@@ -52,7 +52,7 @@ export const newOrderStore: NewOrderStore = (service, initOrder) => {
                         onOpenByAction('error');
                     },
                     () => {
-                        onOpenByAction('sendMessageDone');
+                        onOpenByAction('send a message done');
                     }
                 )
             )
@@ -60,7 +60,7 @@ export const newOrderStore: NewOrderStore = (service, initOrder) => {
     );
     const isOrderPrepaymenteffect = pipe(
         isOrderPrepaymentEvent,
-        chain(() => service.Prepayment(id.get())),
+        chain(() => service.prepayment(id.get())),
         tap((response) =>
             pipe(
                 response,
@@ -69,7 +69,7 @@ export const newOrderStore: NewOrderStore = (service, initOrder) => {
                         onOpenByAction('error');
                     },
                     () => {
-                        onOpenByAction('prepaidDone');
+                        onOpenByAction('prepaid done');
                     }
                 )
             )
@@ -80,7 +80,7 @@ export const newOrderStore: NewOrderStore = (service, initOrder) => {
         // функция = (нач знач) => {func,func,func...};
         orderCancelEvent,
         chain((needRefund: boolean) =>
-            service.CancelOrder(id.get(), needRefund)
+            service.cancelOrder(id.get(), needRefund)
         ),
         tap((response) =>
             pipe(
@@ -90,7 +90,7 @@ export const newOrderStore: NewOrderStore = (service, initOrder) => {
                         onOpenByAction('error');
                     },
                     () => {
-                        onOpenByAction('cancelDone');
+                        onOpenByAction('cancel done');
                     }
                 )
             )
@@ -111,7 +111,7 @@ export const newOrderStore: NewOrderStore = (service, initOrder) => {
             popupIsOpen,
             popupTitle,
             onOpenByAction,
-            ClosePopup: () => onOpenByAction(null),
+            closePopup: () => onOpenByAction(null),
             orderCancel,
             isOrderPrepayment,
             sendMessage,

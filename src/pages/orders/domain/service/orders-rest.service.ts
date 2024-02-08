@@ -33,16 +33,16 @@ export interface OrdersService {
         params: Params<string>
     ) => Promise<Either<string, Order>>;
 
-    readonly CancelOrder: (
+    readonly cancelOrder: (
         id: number,
         needRefund: boolean
     ) => Stream<Either<string, string>>;
 
-    readonly Prepayment: (
+    readonly prepayment: (
         id: number
     ) => Stream<Either<string, PrepaymentResponse>>;
 
-    readonly SendMessage: (
+    readonly sendMessage: (
         id: number,
         message: string
     ) => Stream<Either<string, string>>;
@@ -87,7 +87,6 @@ export const newOrdersService = (): OrdersService => ({
                 },
             })
             .then((resp) => {
-                console.log(resp.data);
                 return either.right(mapOrder(resp.data));
             })
             .catch((error) => {
@@ -98,7 +97,7 @@ export const newOrdersService = (): OrdersService => ({
             });
     },
 
-    CancelOrder: (id, needRefund) => {
+    cancelOrder: (id, needRefund) => {
         return fromPromise(
             axios
                 .delete<string>(
@@ -114,7 +113,7 @@ export const newOrdersService = (): OrdersService => ({
         );
     },
 
-    Prepayment: (id) => {
+    prepayment: (id) => {
         return fromPromise(
             axios
                 .patch<PrepaymentResponse>(
@@ -131,7 +130,7 @@ export const newOrdersService = (): OrdersService => ({
         );
     },
 
-    SendMessage: (id, message) => {
+    sendMessage: (id, message) => {
         return fromPromise(
             axios
                 .post<string>(

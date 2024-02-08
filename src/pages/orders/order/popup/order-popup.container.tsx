@@ -8,11 +8,11 @@ export const OrderPopupContainer = injectable(
     token('store')<OrderStore>(),
     (store) => () => {
         return React.createElement(OrderPopup, {
-            Close: store.ClosePopup,
-            Cancel: store.orderCancel,
-            action: useProperty(store.activeAction),
-            SetPrepayment: store.isOrderPrepayment,
-            SendMessage: store.sendMessage,
+            сlosePopup: store.closePopup,
+            cancelOrder: store.orderCancel,
+            activeAction: useProperty(store.activeAction),
+            setPrepayment: store.isOrderPrepayment,
+            sendMessage: store.sendMessage,
         });
     }
 );

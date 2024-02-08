@@ -4,7 +4,7 @@ import css from './button.module.css';
 import cn from 'classnames';
 import React from 'react';
 
-export type ButtonType = 'def' | 'prime' | 'error' | 'link' | 'unclick';
+export type ButtonType = 'def' | 'prime' | 'error' | 'link' | 'unclickable';
 
 export interface ButtonProps {
     readonly label: string;
@@ -36,7 +36,7 @@ export const Button = ({
                 [css.prime]: type === 'prime',
                 [css.error]: type === 'error',
                 [css.link]: type === 'link',
-                [css.unclickuble]: type === 'unclick',
+                [css.unclickuble]: type === 'unclickable',
             })}
         >
             {label}

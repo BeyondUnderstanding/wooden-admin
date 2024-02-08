@@ -35,7 +35,6 @@ export const Order = injectable(
             games,
             onOpenByAction,
         }: OrderProps) => {
-            console.log(isPayed);
             return (
                 <div className={css.wrap}>
                     <div className={css.headline}>
@@ -84,7 +83,9 @@ export const Order = injectable(
                                 size="small"
                                 disabled={false}
                                 type={
-                                    isPrepayment && !isPayed ? 'def' : 'unclick'
+                                    isPrepayment && !isPayed
+                                        ? 'def'
+                                        : 'unclickable'
                                 }
                             />
                         </div>
