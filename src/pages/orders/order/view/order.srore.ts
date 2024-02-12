@@ -11,7 +11,7 @@ import {
     getOrderPopupTitle,
 } from '../../domain/model/orders.model';
 import { createAdapter } from '@most/adapter';
-import { flow, pipe } from 'fp-ts/lib/function';
+import { pipe } from 'fp-ts/lib/function';
 import { tap, chain } from '@most/core';
 import { either } from 'fp-ts';
 
