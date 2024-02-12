@@ -4,19 +4,19 @@ import React, { useState } from 'react';
 import { OrderAction } from '../../domain/model/orders.model';
 
 export interface OrderPopupProps {
-    readonly сlosePopup: () => void;
-    readonly cancelOrder: (needRefund: boolean) => void;
-    readonly activeAction: OrderAction | null;
-    readonly setPrepayment: (action: string) => void;
+    readonly closePopup: () => void;
+    readonly orderCancel: (needRefund: boolean) => void;
+    readonly isOrderPrepayment: (action: string) => void;
     readonly sendMessage: (message: string) => void;
+    readonly activeAction: OrderAction | null;
 }
 
 export const OrderPopup = ({
-    сlosePopup,
-    cancelOrder,
-    activeAction,
-    setPrepayment,
+    closePopup,
+    orderCancel,
+    isOrderPrepayment,
     sendMessage,
+    activeAction,
 }: OrderPopupProps) => {
     const [checkState, setCheckState] = useState(false);
     const [message, setMessage] = useState('');
@@ -32,7 +32,7 @@ export const OrderPopup = ({
             <div className={css.message}>
                 <Button
                     label={'Ок'}
-                    onClick={сlosePopup}
+                    onClick={closePopup}
                     size="small"
                     disabled={false}
                     type={'def'}
@@ -55,7 +55,7 @@ export const OrderPopup = ({
                     <div className={css.actions}>
                         <Button
                             label={'Отменить'}
-                            onClick={сlosePopup}
+                            onClick={closePopup}
                             size="small"
                             disabled={false}
                             type={'def'}
@@ -89,7 +89,7 @@ export const OrderPopup = ({
                     <div className={css.actions}>
                         <Button
                             label={'Нет'}
-                            onClick={сlosePopup}
+                            onClick={closePopup}
                             size="small"
                             disabled={false}
                             type={'def'}
@@ -97,7 +97,7 @@ export const OrderPopup = ({
 
                         <Button
                             label={'Да'}
-                            onClick={() => setPrepayment('show message')}
+                            onClick={() => isOrderPrepayment('show message')}
                             size="small"
                             disabled={false}
                             type={'prime'}
@@ -124,7 +124,7 @@ export const OrderPopup = ({
                             <div className={css.actions}>
                                 <Button
                                     label={'Нет'}
-                                    onClick={сlosePopup}
+                                    onClick={closePopup}
                                     size="small"
                                     disabled={false}
                                     type={'def'}
@@ -132,7 +132,7 @@ export const OrderPopup = ({
 
                                 <Button
                                     label={'Отменить заказ'}
-                                    onClick={() => cancelOrder(checkState)}
+                                    onClick={() => orderCancel(checkState)}
                                     size="small"
                                     disabled={false}
                                     type={'prime'}

@@ -24,7 +24,7 @@ const ProductCard = ({ productCard, isBonus }: ProductCardProps) => {
                 </>
             );
         } else {
-            return <></>;
+            return null;
         }
     };
 

@@ -85,7 +85,7 @@ export const Order = injectable(
                                 type={
                                     isPrepayment && !isPayed
                                         ? 'def'
-                                        : 'unclickable'
+                                        : 'disavailable'
                                 }
                             />
                         </div>

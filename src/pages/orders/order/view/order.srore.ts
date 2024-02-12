@@ -77,7 +77,6 @@ export const newOrderStore: NewOrderStore = (service, initOrder) => {
     );
 
     const cancelOrderEffect = pipe(
-        // функция = (нач знач) => {func,func,func...};
         orderCancelEvent,
         chain((needRefund: boolean) =>
             service.cancelOrder(id.get(), needRefund)
@@ -122,5 +121,5 @@ export const newOrderStore: NewOrderStore = (service, initOrder) => {
         cancelOrderEffect,
         isOrderPrepaymenteffect,
         sendMessageEffect
-    ); // object , streams
+    );
 };

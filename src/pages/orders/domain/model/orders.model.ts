@@ -176,7 +176,7 @@ export type OrderAction =
     | { kind: 'show massage'; message: string }
     | { kind: 'canel the order'; id: number };
 
-export const getOrderPopupTitle = (action: OrderAction | null) => {
+export const getOrderPopupTitle = (action: OrderAction | null): string => {
     switch (action) {
         case 'send a massage':
             return 'Отправить сообщение?';

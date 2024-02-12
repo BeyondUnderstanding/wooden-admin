@@ -7,12 +7,10 @@ import { useProperty } from '@frp-ts/react';
 export const OrderPopupContainer = injectable(
     token('store')<OrderStore>(),
     (store) => () => {
+        const activeAction = useProperty(store.activeAction);
         return React.createElement(OrderPopup, {
-            сlosePopup: store.closePopup,
-            cancelOrder: store.orderCancel,
-            activeAction: useProperty(store.activeAction),
-            setPrepayment: store.isOrderPrepayment,
-            sendMessage: store.sendMessage,
+            ...store,
+            activeAction,
         });
     }
 );
