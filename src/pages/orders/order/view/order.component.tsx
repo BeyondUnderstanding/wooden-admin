@@ -17,7 +17,6 @@ export const Order = injectable(
     OrderPopupContainer,
     (PopupContainer, Popup) =>
         ({
-            //context as your name
             id,
             startDate,
             endDate,
