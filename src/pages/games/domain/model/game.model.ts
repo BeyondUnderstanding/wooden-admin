@@ -111,7 +111,7 @@ interface ChangePriority {
     imgId: number;
 }
 
-export const getPopupTitle = (action: GameAction | null) => {
+export const getPopupTitle = (action: GameAction | null): string => {
     switch (action) {
         case 'title change':
             return 'Изменение основных характеристик';

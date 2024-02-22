@@ -3,8 +3,8 @@ import {
     ValueWithEffect,
     valueWithEffect,
 } from '../../../utils/run-view-model.utils';
-import { OrderService } from '../domain/service/orders-rest.service';
-import { Order } from '../domain/model/orders.model';
+import { OrdersService } from '../domain/service/orders-rest.service';
+import { Orders } from '../domain/model/orders.model';
 import { Property, property } from '@frp-ts/core';
 import { newLensedAtom } from '@frp-ts/lens';
 import { flow, pipe } from 'fp-ts/lib/function';
@@ -14,9 +14,9 @@ import { scroll } from '@most/dom-event';
 import { fromProperty } from '../../../utils/property.utils';
 
 export interface OrdersStore {
-    readonly orders: Property<ReadonlyArray<Order>>;
+    readonly orders: Property<ReadonlyArray<Orders>>;
     readonly isLoadingExtraOrders: Property<boolean>;
-    readonly setOrders: (x: ReadonlyArray<Order>) => void;
+    readonly setOrders: (x: ReadonlyArray<Orders>) => void;
     readonly setIsLoadingExtraOrders: (x: boolean) => void;
     readonly setOnlyActive: (x: boolean) => void;
     readonly setOnlyPayed: (x: boolean) => void;
@@ -25,9 +25,9 @@ export interface OrdersStore {
 type NewOrdersStore = ValueWithEffect<OrdersStore>;
 
 export const newOrdersStore = injectable(
-    token('service')<OrderService>(),
+    token('service')<OrdersService>(),
     (service): NewOrdersStore => {
-        const orders = newLensedAtom<ReadonlyArray<Order>>([]);
+        const orders = newLensedAtom<ReadonlyArray<Orders>>([]);
         const onlyActive = newLensedAtom(false);
         const onlyPayed = newLensedAtom(false);
 
@@ -39,7 +39,7 @@ export const newOrdersStore = injectable(
                 flow(
                     either.fold(
                         () => orders.set([]),
-                        (ordersResp: ReadonlyArray<Order>) =>
+                        (ordersResp: ReadonlyArray<Orders>) =>
                             orders.set(ordersResp)
                     )
                 )
@@ -68,7 +68,7 @@ export const newOrdersStore = injectable(
                 flow(
                     either.fold(
                         () => isLoadingExtraOrders.set(false),
-                        (ordersResp: ReadonlyArray<Order>) => {
+                        (ordersResp: ReadonlyArray<Orders>) => {
                             orders.modify((orders) => [
                                 ...new Set([...orders, ...ordersResp]),
                             ]);
@@ -94,7 +94,7 @@ export const newOrdersStore = injectable(
                 flow(
                     either.fold(
                         () => isLoadingExtraOrders.set(false),
-                        (ordersResp: ReadonlyArray<Order>) => {
+                        (ordersResp: ReadonlyArray<Orders>) => {
                             orders.set(ordersResp);
                             isLoadingExtraOrders.set(false);
                         }
