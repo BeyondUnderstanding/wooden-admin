@@ -4,7 +4,10 @@ import css from './calendar-day.module.css';
 import { injectable, token } from '@injectable-ts/core';
 
 interface CalendarDayContext {
-    readonly updateAsideDate: (day: Array<Game | 'closed slot'>) => void;
+    readonly updateAsideDate: (data: {
+        game: Array<Game | 'closed slot'>;
+        day: number;
+    }) => void;
 }
 
 export const CalendarDay = injectable(
@@ -34,7 +37,8 @@ export const CalendarDay = injectable(
                             occupiedGames.every((d) => d === 'closed slot'),
                     })}
                     onClick={() =>
-                        isCurrentMonth && store.updateAsideDate(occupiedGames)
+                        isCurrentMonth &&
+                        store.updateAsideDate({ game: occupiedGames, day })
                     }
                 >
                     <div

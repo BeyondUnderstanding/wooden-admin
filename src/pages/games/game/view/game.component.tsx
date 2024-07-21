@@ -42,7 +42,7 @@ export const Game = injectable(
                         </div>
                         <Button
                             label={'Архивировать'}
-                            onClick={constVoid}
+                            onClick={() => onOpenByAction('archive')}
                             disabled={false}
                             size="medium"
                             type={'prime'}

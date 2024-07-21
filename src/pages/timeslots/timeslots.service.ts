@@ -14,11 +14,13 @@ export interface TimeSlotsService {
         y: number
     ) => Stream<Either<string, GridDataResponse>>;
     readonly closeSlot: (isoDate: string) => Stream<Either<string, string>>;
+    readonly openSlot: (isoDate: string) => Stream<Either<string, string>>;
 }
 
 const API = {
     grid: `${domain}/orders/grid/`,
     close: `${domain}/orders/grid/close`,
+    open: `${domain}/orders/grid/open`,
 };
 
 export const newTimeSlotsService = (): TimeSlotsService => ({
@@ -48,6 +50,28 @@ export const newTimeSlotsService = (): TimeSlotsService => ({
             axios
                 .post<string>(
                     API.close,
+                    { timeslot: isoDate, all_day: true },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${Cookies.get(
+                                'access_token'
+                            )}`,
+                        },
+                    }
+                )
+                .then((resp) => either.right(resp.data))
+                .catch((error) => {
+                    logout();
+                    return either.left(
+                        `Something goes wrong status = ${error.response.status}`
+                    );
+                })
+        ),
+    openSlot: (isoDate) =>
+        fromPromise(
+            axios
+                .post<string>(
+                    API.open,
                     { timeslot: isoDate, all_day: true },
                     {
                         headers: {

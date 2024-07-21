@@ -41,7 +41,7 @@ export const CalendarControls = ({
                 />
                 <Button
                     label={'открыть слот'}
-                    onClick={() => onOpenByAction('close slote')}
+                    onClick={() => onOpenByAction('open slote')}
                     disabled={availabilityOpenSlot}
                     type={'def'}
                 />

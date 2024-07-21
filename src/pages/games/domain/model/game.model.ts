@@ -103,6 +103,7 @@ export type GameAction =
     | 'save changes'
     | 'error'
     | 'add characteristics'
+    | 'archive'
     | 'upload file'
     | ChangePriority;
 
@@ -123,6 +124,8 @@ export const getPopupTitle = (action: GameAction | null) => {
             return 'Добавить характеристики';
         case 'upload file':
             return 'Загрузить фото';
+        case 'archive':
+            return 'Удалить игру?';
         default:
             switch (action?.kind) {
                 case 'change priority':

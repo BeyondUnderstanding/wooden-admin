@@ -12,7 +12,8 @@ export const GamesContainer = injectable(
 
         return React.createElement(Games, {
             games: useProperty(store.games),
-            isLoadingExtraOrders: false,
+            isLoadingExtraOrders: useProperty(store.isLoadingExtraOrders),
+            createNewGame: store.createNewGame,
         });
     }
 );

@@ -5,6 +5,7 @@ import {
 } from '../../../utils/run-view-model.utils';
 import {
     Calendar,
+    DateStringToISODateStringWithoutTineZone,
     Game,
     GridDataResponse,
     MonthsIndexes,
@@ -28,15 +29,20 @@ export interface TimeSlotsStore {
     readonly incrementMonth: () => void;
     readonly decrementMonth: () => void;
     readonly year: Property<number>;
+    readonly dayInStore: Property<number>;
     readonly games: Property<Array<Game | 'closed slot'>>;
     readonly datetime: Property<string>;
-    readonly updateAsideDate: (day: Array<Game | 'closed slot'>) => void;
+    readonly updateAsideDate: (data: {
+        game: Array<Game | 'closed slot'>;
+        day: number;
+    }) => void;
     readonly calendarData: Property<Calendar>;
     readonly popupTitle: Property<string>;
     readonly popupIsOpen: Property<boolean>;
     readonly onOpenByAction: (e: TimeSlotsActions) => void;
     readonly activeAction: Property<TimeSlotsActions>;
     readonly closeSlot: (isoDate: string) => Stream<Either<string, string>>;
+    readonly openSlot: () => Stream<Either<string, string>>;
     readonly availabilityOpenSlot: Property<boolean>;
 }
 
@@ -60,8 +66,12 @@ export const newTimeSlotsStore: NewTimeSlotsStore = () => {
         generateCalendarForMonth(year.get(), month.get())
     );
 
-    const [updateAsideDate, asideDateEffect] =
-        createAdapter<Array<Game | 'closed slot'>>();
+    const [updateAsideDate, asideDateEffect] = createAdapter<{
+        game: Array<Game | 'closed slot'>;
+        day: number;
+    }>();
+
+    const dayInStore = newLensedAtom(1);
 
     const popupIsOpen = newLensedAtom(false);
     const popupTitle = newLensedAtom<string>('');
@@ -130,10 +140,13 @@ export const newTimeSlotsStore: NewTimeSlotsStore = () => {
 
     const asideDataEffect = pipe(
         asideDateEffect,
-        tap((occupiedGames) => {
-            games.set(occupiedGames);
-            if (occupiedGames.every((o) => o === 'closed slot')) {
+        tap(({ game, day }) => {
+            games.set(game);
+            dayInStore.set(day);
+            if (game.length !== 0 && game.every((o) => o === 'closed slot')) {
                 availabilityOpenSlot.set(false);
+            } else {
+                availabilityOpenSlot.set(true);
             }
         })
     );
@@ -150,7 +163,6 @@ export const newTimeSlotsStore: NewTimeSlotsStore = () => {
         tap((action) => {
             activeAction.set(action);
             popupIsOpen.set(!!action);
-            //  popupTitle.set(getPopupTitle(action));
         })
     );
 
@@ -168,7 +180,18 @@ export const newTimeSlotsStore: NewTimeSlotsStore = () => {
             popupTitle,
             onOpenByAction,
             activeAction,
+            dayInStore,
             closeSlot: service.closeSlot,
+            openSlot: () =>
+                service.openSlot(
+                    DateStringToISODateStringWithoutTineZone(
+                        new Date(
+                            year.get(),
+                            month.get(),
+                            dayInStore.get() + 1
+                        ).toISOString()
+                    )
+                ),
             availabilityOpenSlot,
         },
         initGridData,

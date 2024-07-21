@@ -12,6 +12,7 @@ export interface TimeSlotsPopupBodyProps {
     readonly setCloseSlot: (data: string) => void;
     readonly onCancel: () => void;
     readonly onSave: () => void;
+    readonly activeDate: string;
 }
 
 export const TimeSlotsPopupBody = ({
@@ -19,6 +20,7 @@ export const TimeSlotsPopupBody = ({
     setCloseSlot,
     onCancel,
     onSave,
+    activeDate,
 }: TimeSlotsPopupBodyProps) => {
     const action = useProperty(type);
 
@@ -58,7 +60,30 @@ export const TimeSlotsPopupBody = ({
                     </div>
                 </div>
             );
-
+        case 'open slote':
+            return (
+                <div className={css.bodyWrap}>
+                    <div className={css.inputWrap}>
+                        <span>Открыть дату на: {activeDate}</span>
+                    </div>
+                    <div className={css.controls}>
+                        <Button
+                            label={'No'}
+                            onClick={onCancel}
+                            disabled={false}
+                            size="medium"
+                            type={'def'}
+                        />
+                        <Button
+                            label={'Yes'}
+                            onClick={onSave}
+                            disabled={false}
+                            size="medium"
+                            type={'prime'}
+                        />
+                    </div>
+                </div>
+            );
         default:
             return <span>Что то пошло не так</span>;
     }

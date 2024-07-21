@@ -47,6 +47,10 @@ export interface GamesService {
     ) => Stream<
         Either<'wrong data' | string, { id: number; priority: number }>
     >;
+    readonly archiveGame: (
+        id: number
+    ) => Stream<Either<'wrong data' | string, unknown>>;
+    readonly createNewGame: () => Stream<Either<'wrong data' | string, number>>;
 }
 
 const API = {
@@ -265,6 +269,44 @@ export const newGamesService = (): GamesService => ({
                         priority: priority,
                     })
                 )
+                .catch((_) => either.left('err'))
+        );
+    },
+    archiveGame: (id) => {
+        return fromPromise(
+            axios
+                .delete<{ id: number }>(`${API.games}?id=${id}`, {
+                    headers: {
+                        Authorization: `Bearer ${Cookies.get('access_token')}`,
+                    },
+                })
+                .then((resp) =>
+                    either.right({
+                        ...resp.data,
+                    })
+                )
+                .catch((_) => either.left('err'))
+        );
+    },
+    createNewGame: () => {
+        return fromPromise(
+            axios
+                .post<{ id: number }>(
+                    API.games,
+                    {
+                        title: 'Название',
+                        description: 'Описание',
+                        price: 0,
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${Cookies.get(
+                                'access_token'
+                            )}`,
+                        },
+                    }
+                )
+                .then((resp) => either.right(resp.data.id))
                 .catch((_) => either.left('err'))
         );
     },

@@ -139,4 +139,4 @@ export const DateStringToISODateStringWithoutTineZone = (
 
 // end region
 
-export type TimeSlotsActions = 'close slote' | null;
+export type TimeSlotsActions = 'close slote' | 'open slote' | null;

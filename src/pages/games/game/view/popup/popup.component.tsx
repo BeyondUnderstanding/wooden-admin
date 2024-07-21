@@ -15,6 +15,8 @@ export interface GamePopupBodyProps {
     readonly imgUpload: (event: Partial<NewImg>) => void;
     readonly imgUploadSave: () => void;
     readonly imgUpdatePrioritySave: () => void;
+    readonly onArchive: () => void;
+
     //vm
     readonly baseInfo: BaseInfoGame;
     readonly setBaseInfo: (chenge: Partial<BaseInfoGame>) => void;
@@ -36,6 +38,7 @@ export const GamePopupBody = ({
     characteristics,
     characteristicsOnChange,
     addNewCharacteristics,
+    onArchive,
 }: GamePopupBodyProps) => {
     const action = useProperty(type);
 
@@ -204,7 +207,6 @@ export const GamePopupBody = ({
                             </label>
                         </div>
                     ))}
-                    {/* <button onClick={addNewCharacteristics}>+</button> */}
                     <Button
                         label={'+'}
                         onClick={addNewCharacteristics}
@@ -270,6 +272,27 @@ export const GamePopupBody = ({
                         <Button
                             label={'Yes'}
                             onClick={imgUploadSave}
+                            disabled={false}
+                            size="medium"
+                            type={'prime'}
+                        />
+                    </div>
+                </div>
+            );
+        case 'archive':
+            return (
+                <div className={css.bodyWrap}>
+                    <div className={css.controls}>
+                        <Button
+                            label={'No'}
+                            onClick={onCancel}
+                            disabled={false}
+                            size="medium"
+                            type={'def'}
+                        />
+                        <Button
+                            label={'Yes'}
+                            onClick={onArchive}
                             disabled={false}
                             size="medium"
                             type={'prime'}

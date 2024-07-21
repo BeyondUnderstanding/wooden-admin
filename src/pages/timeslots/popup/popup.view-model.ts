@@ -7,7 +7,7 @@ import { injectable, token } from '@injectable-ts/core';
 import { TimeSlotsStore } from '../timeslots/timeslots.store';
 import { newLensedAtom } from '@frp-ts/lens';
 import { createAdapter } from '@most/adapter';
-import { chain, tap } from '@most/core';
+import { chain, empty, tap } from '@most/core';
 import { either } from 'fp-ts';
 
 export interface BaseInfoGame {
@@ -20,6 +20,7 @@ export interface TimeSlotsPopupViewModel {
     readonly setCloseSlot: (data: string) => void;
     readonly onCancel: () => void;
     readonly onSave: () => void;
+    readonly activeDate: string;
 }
 
 export interface NewTimeSlotsPopupViewModel {
@@ -35,13 +36,25 @@ export const newTimeSlotsPopupViewModel = injectable(
 
             const onSaveEffect = pipe(
                 closeSloteOnSaveEvent,
-                chain((_) => store.closeSlot(closeedDateISOFormat.get())),
+                chain((_) => {
+                    switch (store.activeAction.get()) {
+                        case 'close slote':
+                            return store.closeSlot(closeedDateISOFormat.get());
+                        case 'open slote':
+                            return store.openSlot();
+                        default:
+                            return empty();
+                    }
+                }),
                 tap((resp) => {
                     pipe(
                         resp,
-                        either.fold((err) => {
-                            throw Error('ALARM' + err); // :TODO сделать открытие попап ошибк
-                        }, constVoid)
+                        either.fold(
+                            (err) => {
+                                throw Error('ALARM' + err); // :TODO сделать открытие попап ошибк
+                            },
+                            () => store.onOpenByAction(null)
+                        )
                     );
                 })
             );
@@ -50,6 +63,9 @@ export const newTimeSlotsPopupViewModel = injectable(
                     setCloseSlot: (x) => closeedDateISOFormat.set(x),
                     onCancel: () => store.onOpenByAction(null),
                     onSave: closeSloteOnSave,
+                    activeDate: `${store.year.get()}-${
+                        store.month.get() + 1
+                    }-${store.dayInStore.get()}`,
                 },
                 onSaveEffect
             );

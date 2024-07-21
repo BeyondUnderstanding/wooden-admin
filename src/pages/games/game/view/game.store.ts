@@ -11,7 +11,7 @@ import {
     getPopupTitle,
 } from '../../domain/model/game.model';
 import { createAdapter } from '@most/adapter';
-import { flow, pipe } from 'fp-ts/lib/function';
+import { constVoid, flow, pipe } from 'fp-ts/lib/function';
 import { chain, combineArray, tap } from '@most/core';
 import { Property } from '@frp-ts/core';
 import { either } from 'fp-ts';
@@ -40,6 +40,7 @@ export interface GameStore {
     readonly imgUploadSave: () => void;
     readonly imgDelete: (id: number) => void;
     readonly imgUpdatePrioritySave: () => void;
+    readonly onArchive: () => void;
 }
 
 export interface NewGameStore {
@@ -59,6 +60,8 @@ export const newGameStore: NewGameStore = (service, initGame) => {
     const [imgUploadSave, imgUploadEvent] = createAdapter<void>();
     const [imgUpdatePrioritySave, imgUpdatePrioritySaveEvent] =
         createAdapter<void>();
+
+    const [onArchive, onArchiveEvent] = createAdapter<void>();
 
     const onDeliteAttribute = (id: number) => {
         game.modify((g) => ({
@@ -199,6 +202,19 @@ export const newGameStore: NewGameStore = (service, initGame) => {
         )
     );
 
+    const onArchiveEffect = pipe(
+        onArchiveEvent,
+        chain(() => service.archiveGame(game.get().id)),
+        tap(
+            flow(
+                either.fold(exeption, () => {
+                    window.location.href = '/games';
+                    onOpenByAction(null);
+                })
+            )
+        )
+    );
+
     return valueWithEffect.new(
         {
             game,
@@ -215,11 +231,13 @@ export const newGameStore: NewGameStore = (service, initGame) => {
             onChangeGameAttributes,
             onCancel: () => onOpenByAction(null),
             imgUpload: (file) => img.modify((f) => ({ ...f, ...file })),
+            onArchive,
         },
         actionChangeEvent,
         saveEffect,
         saveImgEffect,
         deleteImgEffect,
-        imgUpdatePrioritySaveEffect
+        imgUpdatePrioritySaveEffect,
+        onArchiveEffect
     );
 };
