@@ -57,3 +57,8 @@
 .link:hover {
     background: transparent;
 }
+
+.disavailable {
+    background-color: gray;
+    pointer-events: none;
+}

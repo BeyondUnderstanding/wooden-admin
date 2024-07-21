@@ -4,7 +4,7 @@ import css from './button.module.css';
 import cn from 'classnames';
 import React from 'react';
 
-export type ButtonType = 'def' | 'prime' | 'error' | 'link';
+export type ButtonType = 'def' | 'prime' | 'error' | 'link' | 'disavailable';
 
 export interface ButtonProps {
     readonly label: string;
@@ -36,6 +36,7 @@ export const Button = ({
                 [css.prime]: type === 'prime',
                 [css.error]: type === 'error',
                 [css.link]: type === 'link',
+                [css.disavailable]: type === 'disavailable',
             })}
         >
             {label}
